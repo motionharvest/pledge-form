@@ -1,29 +1,75 @@
+import {Step0} from "./steps/Step0.jsx";
+import {Step1} from "./steps/Step1.jsx";
+import {Step2} from "./steps/Step2.jsx";
+import {Step3} from "./steps/Step3.jsx";
+import {Step4} from "./steps/Step4.jsx";
+import {Step5} from "./steps/Step5.jsx";
+import {Step6} from "./steps/Step6.jsx";
+import {Step7} from "./steps/Step7.jsx";
+import {Step8} from "./steps/Step8.jsx";
+import {Step9} from "./steps/Step9.jsx";
+import {Step10} from "./steps/Step10.jsx";
+
+State.set({
+  "step": data.step || 0
+});
+
+const stepNames = [
+  "Sign and Continue",
+  "View Commitment Opportunities",
+  "Next: Annual Campaign",
+  "Next: Fundraising Support",
+  "Next: Host a Gathering",
+  "Next: Online Auctions",
+  "Next: Sponsorship Outreach",
+  "Next: Summary",
+  "Proceed to Checkout",
+  "Submit"
+]
+
 export let Form = () => (
     <Fragment>
-        <h2>Persistent Checkbox</h2>
-        <label>
-            <input type="checkbox" data-bind="isChecked" />
-            Remember me
-        </label>
-        <p>Checkbox is {State.get('isChecked') ? "Checked" : "Unchecked"}</p>
-
-        <h2>Persistent Date Picker</h2>
-        <input type="date" data-bind="selectedDate" />
-        <p>Selected Date: {State.get('selectedDate') || "None"}</p>
-
-        <h2>Debugging</h2>
-        <button onClick={() => console.log(State.getData())}>Log State</button>
+        <div show-if="step=0"><Step0/></div>
+        <div show-if="step=1"><Step1/></div>
+        <div show-if="step=2"><Step2/></div>
+        <div show-if="step=3"><Step3/></div>
+        <div show-if="step=4"><Step4/></div>
+        <div show-if="step=5"><Step5/></div>
+        <div show-if="step=6"><Step6/></div>
+        <div show-if="step=7"><Step7/></div>
+        <div show-if="step=8"><Step8/></div>
+        <div show-if="step=9"><Step9/></div>
+        <div show-if="step=10"><Step10/></div>
     </Fragment>
 );
 
-jssLite({
-  ".torture": {
-    border: "solid 1px red"
-  }
-})
-
 export let Nav = () => (
-  <>
-    <button onClick={()=>{State.set({"step": State.get("step")})}}>Next Step</button>
-  </>
+  <div class="flex justify-center gap-4 mt-4">
+    <button show-if="step>0" onClick={() => prevStep()} class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2 mt-5 rounded-lg text-sm font-medium transition">Back</button>
+
+    <button show-if="step<10" onClick={() => nextStep()} class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2 mt-5 rounded-lg text-sm font-medium transition" data-bind="stepNameNext"></button>
+  </div>
 )
+
+function nextStep() {
+  if(data.step <= 10) {
+    const num = data.step += 1;
+    State.set({
+      "step": num,
+      "stepNameNext": stepNames[num],
+      "stepNameBack": stepNames[num - 1]
+    })
+  }
+}
+
+function prevStep() {
+  if(data.step >= 1) {
+    const num = data.step -= 1;
+    State.set({
+      "step": num,
+      "stepNameNext": stepNames[num],
+      "stepNameBack": stepNames[num - 1]
+    })
+  }
+}
+
