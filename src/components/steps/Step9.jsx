@@ -15,6 +15,10 @@ const checkAmt = () => {
             total += Number(State.get("step3_3_other-value"));
         }
     }
+    
+    if(State.get("oneTimeGiftToday")) {
+      total += Number(State.get("totalPledgeCommitment"))
+    }
 
     State.set({
         "totalAmt": total.toLocaleString()
