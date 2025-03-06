@@ -1,6 +1,3 @@
-function test() {
-    alert("shown")
-}
 
 export let Step0 = () => (
 
@@ -25,7 +22,7 @@ export let Step0 = () => (
                    class="w-full mt-1 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-indigo-500 focus:border-indigo-500" data-bind="step0_phone"></input>
         </div>
 
-        <div class="flex mt-3 space-x-2" data-onshow={()=>alert('done')}>
+        <div class="flex mt-3 space-x-2">
             <input type="checkbox" id="pledge" checked class="w-5 h-5 text-indigo-600 border-gray-300 rounded" data-bind="step0_agree"></input>
             <label for="pledge" class="text-sm text-gray-700 leading-tight">
                 As a Board Member of Elm Shakespeare Company, I commit to strengthening and sustaining the organization 

@@ -132,17 +132,20 @@ function bindInputs(data) {
   document.addEventListener('change', (event) => {
     const target = event.target;
     const key = target.getAttribute('data-bind');
-    if (key && target.type !== 'radio') {
+
+    if (key) {
       if (target.type === 'checkbox') {
-        data[key] = target.checked;
+        data[key] = target.checked; // ✅ Ensures checkboxes update correctly
+        updateDOM(key, target.checked); // ✅ Sync DOM with state
       } else {
         data[key] = target.value;
+        updateDOM(key, target.value);
       }
-      updateDOM(key, target.value);
       updateVisibility();
       updateClasses();
     }
   });
+
 }
 
 class State {
