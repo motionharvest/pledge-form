@@ -196,8 +196,6 @@ const observer = new IntersectionObserver((entries) => {
       const element = entry.target;
       const onShowFn = element.getAttribute('data-onshow'); // Get function as string
 
-      console.log(`[data-onshow] Element Became Visible:`, element);
-
       if (onShowFn) {
         try {
           // Convert string into function and bind to the correct scope (e.g., instance)
@@ -217,7 +215,6 @@ const observer = new IntersectionObserver((entries) => {
 // ✅ Debugging: Ensure Elements Are Observed
 function trackOnShowElements() {
   const elements = document.querySelectorAll('[data-onshow]');
-  console.log(`[data-onshow] Found ${elements.length} elements to observe.`);
 
   elements.forEach(element => observer.observe(element));
 }
