@@ -1,6 +1,6 @@
 export let Step5 = () => (
     <div class="container bg-white p-6 rounded-lg shadow-lg max-w-2xl w-full">
-        <h2 class="text-xl font-semibold">Support for Fundraising Events</h2>
+        <h2 class="text-xl font-semibold">Host a Gathering</h2>
         <p class="text-gray-700 mt-1">
             As a board member, you can play a vital role in building support for Elm’s 30th Anniversary season by 
             hosting or attending a special gathering. Hosts curate the guest list and cover catering and venue 

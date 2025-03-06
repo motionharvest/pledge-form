@@ -21,6 +21,11 @@ export let Step3 = () => (
 
             <div class="mt-3 space-y-3">
                 <label class="flex items-center space-x-2">
+                    <input type="checkbox" data-bind="oneTimeGiftToday" class="w-5 h-5 text-indigo-600 border-gray-300 rounded" />
+                    <span class="text-gray-700 text-sm">Pay today</span>
+                </label>
+
+                <label class="flex items-center space-x-2">
                     <input type="checkbox" data-bind="oneTimeGift" class="w-5 h-5 text-indigo-600 border-gray-300 rounded" />
                     <span class="text-gray-700 text-sm">One-time gift on</span>
                     <input type="date" data-bind="oneTimeGiftDate" 
@@ -53,7 +58,9 @@ export let Step3 = () => (
                     <input type="text" data-bind="otherPaymentDetails" 
                         class="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-indigo-500 focus:border-indigo-500"/>
                 </label>
+                
             </div>
+            
         </div>
     </div>      
 )

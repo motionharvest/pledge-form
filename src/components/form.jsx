@@ -10,9 +10,6 @@ import {Step8} from "./steps/Step8.jsx";
 import {Step9} from "./steps/Step9.jsx";
 import {Step10} from "./steps/Step10.jsx";
 
-State.set({
-  "step": data.step || 0
-});
 
 const stepNames = [
   "Sign and Continue",
@@ -37,7 +34,7 @@ export let Form = () => (
         <div show-if="step=5"><Step5/></div>
         <div show-if="step=6"><Step6/></div>
         <div show-if="step=7"><Step7/></div>
-        <div show-if="step=8"><Step8/></div>
+        <div show-if="step=8"><Step8 setStep={setStep}/></div>
         <div show-if="step=9"><Step9/></div>
         <div show-if="step=10"><Step10/></div>
     </Fragment>
@@ -50,6 +47,14 @@ export let Nav = () => (
     <button show-if="step<10" onClick={() => nextStep()} class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2 mt-5 rounded-lg text-sm font-medium transition" data-bind="stepNameNext"></button>
   </div>
 )
+
+function setStep(num) {
+    State.set({
+      "step": num,
+      "stepNameNext": stepNames[num],
+      "stepNameBack": stepNames[num - 1]
+    })
+}
 
 function nextStep() {
   if(data.step <= 10) {
@@ -73,3 +78,8 @@ function prevStep() {
   }
 }
 
+State.set({
+  "step": data.step || 0,
+  "stepNameNext": stepNames[data.step || 0],
+  "stepNameBack": stepNames[(data.step || 0) - 1]
+})

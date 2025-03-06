@@ -64,6 +64,21 @@ export let Step2 = () => (
                     </label>
                 </div>
             </div>
+            <div class="mt-6">
+            <p class="font-semibold">Payment Options:</p>
+
+            <div class="mt-3 space-y-2">
+                <label class="flex items-center space-x-2">
+                    <input type="radio" name="paymentOption" value="payToday" data-bind="paymentOption" class="w-5 h-5 text-indigo-600 border-gray-300 rounded"/>
+                    <span class="text-gray-900">Pay today</span>
+                </label>
+
+                <label class="flex items-center space-x-2">
+                    <input type="radio" name="paymentOption" value="payLater" data-bind="paymentOption" class="w-5 h-5 text-indigo-600 border-gray-300 rounded"/>
+                    <span class="text-gray-900">Pay later</span>
+                </label>
+            </div>
+        </div>
         </div>
     </div>
 )
