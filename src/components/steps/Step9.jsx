@@ -29,7 +29,10 @@ export let Step9 = () => (
     <div class="container bg-white p-6 rounded-lg shadow-lg max-w-2xl w-full" onShow={()=>checkAmt()}>
         <h2 class="text-xl font-semibold">
             <span class="font-bold">Checkout Page</span>
+            Pay today
             <div>Total Amt Today $<span data-bind="totalAmt"></span></div>
+            <br/>
+            Pay by check
         </h2>
     </div>
 )
