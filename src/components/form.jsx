@@ -20,8 +20,8 @@ const stepNames = [
   "Next: Online Auctions",
   "Next: Sponsorship Outreach",
   "Next: Summary",
-  "Proceed to Checkout",
-  "Submit"
+  "Next: Payment",
+  "Complete Pledge"
 ]
 
 export let Form = () => (
@@ -42,7 +42,7 @@ export let Form = () => (
 
 export let Nav = () => (
   <div class="flex justify-center gap-4 mt-4">
-    <button show-if="step>0" onClick={() => prevStep()} class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2 mt-5 rounded-lg text-sm font-medium transition">Back</button>
+    <button show-if="step>0" onClick={() => prevStep()} class="w-full bg-gray-600 hover:bg-gray-700 text-white py-2 mt-5 rounded-lg text-sm font-medium transition">Back</button>
 
     <button show-if="step<10" onClick={() => nextStep()} class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2 mt-5 rounded-lg text-sm font-medium transition" data-bind="stepNameNext"></button>
   </div>
