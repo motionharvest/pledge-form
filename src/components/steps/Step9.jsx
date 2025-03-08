@@ -34,9 +34,9 @@ const checkAmt = () => {
     }
     
     if(State.get("oneTimeGiftToday")) {
-        tallyToday += Number(State.get("totalPledgeCommitment"))
+        tallyToday += Number(State.get("totalPledgeCommitment")) || 0
     } else {
-        tallyLater += Number(State.get("totalPledgeCommitment"))
+        tallyLater += Number(State.get("totalPledgeCommitment")) || 0
     }
 
     State.set({
