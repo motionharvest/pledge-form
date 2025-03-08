@@ -1,5 +1,5 @@
 export let Step7 = () => (
-    <div class="container bg-white p-6 rounded-lg shadow-lg max-w-2xl w-full">
+    <div class="container mb-32 bg-white p-6 rounded-lg shadow-lg max-w-2xl w-full">
         <h2 class="text-xl font-semibold">
             <span class="font-bold">Sponsorship Outreach </span> 
             <span class="text-gray-700 text-sm">(Deadline to join the effort: March 1; sponsor deadline May 1)</span>

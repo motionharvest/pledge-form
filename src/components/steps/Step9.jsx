@@ -54,10 +54,12 @@ const openDonorsnapForm = () => {
     let url = `https://forms.donorsnap.com/form?id=bea499a2-6931-4125-9d55-9a14bcf43c3a&firstName=${firstName}&lastName=${lastName}&email=${email}&phone=${phone}&amount=${State.get("tallyToday")||0}`
     
     window.open(url);
+    
+    alert("done")
 }
 
 export let Step9 = () => (
-    <div class="container bg-white p-6 rounded-lg shadow-lg max-w-2xl w-full" onShow={()=>checkAmt()}>
+    <div class="container mb-32 bg-white p-6 rounded-lg shadow-lg max-w-2xl w-full" onShow={()=>checkAmt()}>
 
         <h2 class="text-xl font-semibold">Payment Methods</h2>
 

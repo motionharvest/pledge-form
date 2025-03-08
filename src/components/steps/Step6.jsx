@@ -1,5 +1,5 @@
 export let Step6 = () => (
-    <div class="container bg-white p-6 rounded-lg shadow-lg max-w-2xl w-full">
+    <div class="container mb-32 bg-white p-6 rounded-lg shadow-lg max-w-2xl w-full">
         <h2 class="text-xl font-semibold">Help with Online Auctions</h2>
 
         <div class="mt-4">

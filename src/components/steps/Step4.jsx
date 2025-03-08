@@ -1,5 +1,5 @@
 export let Step4 = () => (
-    <div class="container bg-white p-6 rounded-lg shadow-lg max-w-2xl w-full">
+    <div class="container bg-white p-6 mb-32 rounded-lg shadow-lg max-w-2xl w-full">
         <h2 class="text-xl font-semibold">Support for Fundraising Events</h2>
         <p class="text-gray-700 mt-1">
             Contribute bottles of wine or gift cards to support our Masquerade Ball and Elm’s Fundraising

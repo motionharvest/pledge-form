@@ -1,5 +1,5 @@
 export let Step2 = () => (
-    <div class="container">
+    <div class="container mb-32">
         <div class="bg-white p-6 rounded-lg shadow-lg max-w-2xl w-full">
             <h2 class="text-xl font-semibold">Great Give - Director’s Circle</h2>
             <p class="text-gray-700 mt-1">Three ways to support Elm Shakespeare during the Great Give (May 7 and 8)</p>

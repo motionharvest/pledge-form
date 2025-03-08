@@ -260,7 +260,7 @@ export let Step8 = (props) => (
             </div>
         </div>
         {/**  */}
-        <div class="mb-4 bg-white p-6 rounded-lg shadow-lg max-w-2xl w-full">
+        <div class="mb-32 bg-white p-6 rounded-lg shadow-lg max-w-2xl w-full">
             <h2 class="text-xl font-semibold">Sponsorship Outreach <a href="#" onClick={() => props.setStep(7)}>✏️edit</a></h2>
 
             <div class="mt-6">

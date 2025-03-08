@@ -11,7 +11,7 @@ export let Step3 = () => (
 
             <div class="flex items-center mt-3">
                 <span class="text-xl font-bold">$</span>
-                <input type="text" data-bind="totalPledgeCommitment" 
+                <input type="text" type="number" data-bind="totalPledgeCommitment" 
                     class="ml-2 w-20 px-3 py-2 border border-gray-300 rounded-lg text-lg focus:ring-indigo-500 focus:border-indigo-500"/>
             </div>
         </div>
