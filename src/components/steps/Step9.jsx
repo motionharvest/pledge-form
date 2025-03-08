@@ -55,7 +55,6 @@ const openDonorsnapForm = () => {
     
     window.open(url);
     
-    alert("done")
 }
 
 export let Step9 = () => (
