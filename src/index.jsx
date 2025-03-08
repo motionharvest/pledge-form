@@ -1,4 +1,5 @@
 import {Form, Nav} from '@/components/form.jsx';
+import { TodoList } from './components/todo.jsx';
 
 // Log the reactive data object
 console.log("Loaded State:", data);
@@ -7,6 +8,7 @@ console.log("Loaded State:", data);
 // Main App Component
 let App = () => (
     <div id="app">
+        <TodoList/>
         <Form/>
         <Nav/>
     </div>

@@ -45,7 +45,7 @@ const checkAmt = () => {
         "totalAmtLater": tallyLater.toLocaleString()
     })
 }
-
+let childWindow;
 const openDonorsnapForm = () => {
     let fullName = State.get("step0_name").trim();
     let [firstName, lastName] = fullName.split(/\s+(.+)/)
@@ -53,9 +53,17 @@ const openDonorsnapForm = () => {
     let phone = State.get("step0_phone").trim();
     let url = `https://forms.donorsnap.com/form?id=bea499a2-6931-4125-9d55-9a14bcf43c3a&firstName=${firstName}&lastName=${lastName}&email=${email}&phone=${phone}&amount=${State.get("tallyToday")||0}`
     
-    window.open(url);
+    childWindow = window.open(url, "meaningfulName");
     
 }
+
+window.addEventListener("message", (event) => {
+    if(event.data == "PaymentSubmitted") {
+        State.set({
+            payNowSubmitted: true
+        })
+    }
+});
 
 export let Step9 = () => (
     <div class="container mb-32 bg-white p-6 rounded-lg shadow-lg max-w-2xl w-full" onShow={()=>checkAmt()}>
@@ -72,14 +80,13 @@ export let Step9 = () => (
         <div class="mt-6">
             <p class="font-semibold text-lg"><span show-if="!payNowSubmitted">Pay</span><span show-if="payNowSubmitted">Paid</span> today: $<span class="font-bold" data-bind="totalAmtToday"></span></p>
 
-            <button onClick={openDonorsnapForm} class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 mt-2 rounded-lg transition">
+            <button show-if="!payNowSubmitted" onClick={openDonorsnapForm} class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 mt-2 rounded-lg transition">
                 Open Credit/ACH Payment Form
             </button>
             <label class="flex items-start space-x-2 mt-4">
-                <input type="checkbox" data-bind="payNowSubmitted" class="w-5 h-5 text-indigo-600 border-gray-300 rounded mt-1" />
+                <input type="checkbox" disabled="disabled" data-bind="payNowSubmitted" class="w-5 h-5 text-indigo-600 border-gray-300 rounded mt-1" />
                 <div>
                     <span class="font-semibold text-gray-900">Payment sent</span>
-                    <p class="text-gray-600 text-sm italic">Click here after filling out the Credit/ACH Payment Form</p>
                 </div>
             </label>
         </div>

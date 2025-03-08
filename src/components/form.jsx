@@ -21,7 +21,7 @@ const stepNames = [
   "Next: Sponsorship Outreach",
   "Next: Summary",
   "Next: Payment",
-  "Complete Pledge"
+  "Complete My Pledge"
 ]
 
 export let Form = () => (
