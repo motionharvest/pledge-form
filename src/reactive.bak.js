@@ -153,7 +153,7 @@ class State {
     if (!State.instance) {
       let storedData = JSON.parse(localStorage.getItem('state')) || {};
       if (!sessionStorage.getItem('initialized')) {
-        storedData = {};
+        storedData = {}; 
         sessionStorage.setItem('initialized', 'true');
       }
       this.data = reactive(storedData, this.updateLocalStorage.bind(this));
@@ -195,7 +195,7 @@ export default instance;
 
 const observer = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
-    if (entry.isIntersecting) {
+    if (entry.isIntersecting) { 
       const element = entry.target;
       const onShowFn = element.getAttribute('data-onshow'); // Get function as string
 
