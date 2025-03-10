@@ -32,7 +32,18 @@ let App = () => (
             data-bind="required" 
             value={State.get('required') || ""}
             onBlur={(e) => console.log("onBlur worked! somehow.")}
+            onInput={(e) => State.set({ required: e.target.value })}
         />
+        <p class-if="required matches /^[^\s@]+@[^\s@]+\.[^\s@]+$/ || required==john? good: bad">Is this an email or john?</p>
+        <p class-if="required==aaron?good:bad"><span data-bind="required">{State.get("required")}</span> == aaron</p>
+        <p class-if="required>10?good:bad"><span data-bind="required">{State.get("required")}</span> &gt; 10</p>
+        <p class-if="required>=20?good:bad"><span data-bind="required">{State.get("required")}</span> {'>= 20'}</p>
+        <p class-if="required<5?good:bad"><span data-bind="required">{State.get("required")}</span> &lt; 5</p>
+        <p class-if="required<=0?good:bad"><span data-bind="required">{State.get("required")}</span> {'<= 0'}</p>
+
+
+
+        <br/>--<br/><br/><br/>
         <div className="binder" data-bind="linked">{State.get('linked')}</div>
         <button onClick={() => console.log(State.get('linked'))}>Check linked</button>
         <button onClick={() => console.log(State.get('newProperty'))}>Check newProperty</button>
@@ -70,6 +81,12 @@ let App = () => (
 jssLite({
     ".blue": {
         color: "blue"
+    },
+    ".good" : {
+        color: "green"
+    },
+    ".bad": {
+        color: "red"
     }
 })
 

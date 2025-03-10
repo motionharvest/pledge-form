@@ -52,11 +52,7 @@ function updateClasses() {
 
     classRules.forEach(rule => {
       let match;
-      if (rule.includes(':')) {
-        const [stateKey, className] = rule.split(':').map(s => s.trim());
-        match = instance.get(stateKey);
-        element.classList.toggle(className, !!match);
-      } else if (rule.includes('?')) {
+      if (rule.includes('?')) {
         const [condition, classes] = rule.split('?').map(s => s.trim());
         const [trueClass, falseClass] = classes.split(':').map(s => s.trim());
         match = evaluateCondition(condition);
@@ -64,6 +60,10 @@ function updateClasses() {
         if (falseClass) {
           element.classList.toggle(falseClass, !match);
         }
+      } else if (rule.includes(':')) {
+        const [stateKey, className] = rule.split(':').map(s => s.trim());
+        match = instance.get(stateKey);
+        element.classList.toggle(className, !!match);
       }
     });
   });
@@ -80,42 +80,64 @@ function evaluateCondition(condition) {
 function evaluateSingleCondition(condition) {
   let match = false;
   let stateKey, operator, expectedValue;
+
   if (condition.startsWith('!')) {
     stateKey = condition.substring(1).trim();
     match = !instance.get(stateKey);
-  } else if (!/[=<>!~]/.test(condition)) {
+  } else if (!/[=<>!~]|matches/.test(condition)) {
     stateKey = condition;
     match = !!instance.get(stateKey);
   } else {
     [stateKey, operator, expectedValue] = parseCondition(condition);
     const stateValue = instance.get(stateKey.trim());
-    switch (operator) {
-      case '=':
-        match = stateValue == expectedValue.trim();
-        break;
-      case '!=':
-        match = stateValue != expectedValue.trim();
-        break;
-      case '~=':
-        match =
-          typeof stateValue === 'string' &&
-          stateValue.includes(expectedValue.trim());
-        break;
-      case '>':
-        match = parseFloat(stateValue) > parseFloat(expectedValue);
-        break;
-      case '<':
-        match = parseFloat(stateValue) < parseFloat(expectedValue);
-        break;
+
+    if (operator === 'matches') {
+      try {
+        const regexPattern = expectedValue.trim().replace(/^\/|\/$/g, ''); // Remove leading/trailing slashes
+        const regex = new RegExp(regexPattern);
+        match = regex.test(stateValue);
+      } catch (e) {
+        console.error('Invalid regex in class-if condition:', expectedValue);
+      }
+    } else {
+      switch (operator) {
+        case '==':
+          match = stateValue == expectedValue.trim();
+          break;
+        case '!=':
+          match = stateValue != expectedValue.trim();
+          break;
+        case '~=':
+          match =
+            typeof stateValue === 'string' &&
+            stateValue.includes(expectedValue.trim());
+          break;
+        case '>':
+          match = parseFloat(stateValue) > parseFloat(expectedValue);
+          break;
+        case '<':
+          match = parseFloat(stateValue) < parseFloat(expectedValue);
+          break;
+        case '>=':
+          match = parseFloat(stateValue) >= parseFloat(expectedValue);
+          break;
+        case '<=':
+          match = parseFloat(stateValue) <= parseFloat(expectedValue);
+          break;
+      }
     }
   }
   return match;
 }
 
 function parseCondition(condition) {
-  const match = condition.match(/([a-zA-Z0-9_]+)\s*(=|!=|~=|>|<)?\s*(.*)/);
-  return match ? [match[1], match[2] || '', match[3] || ''] : [condition, '', ''];
+  const match = condition.match(/([a-zA-Z0-9_]+)\s*(==|!=|~=|>=|<=|>|<|matches)\s*(\/.*\/|.+)/);
+  return match ? [match[1], match[2], match[3]] : [condition, '', ''];
 }
+
+
+
+
 
 function bindInputs(data) {
   document.addEventListener('click', (event) => {
