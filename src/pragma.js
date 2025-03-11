@@ -25,23 +25,34 @@ export const h = (tag, props = {}, ...children) => {
     Object.entries(props || {}).forEach(([key, val]) => {
         if (key.startsWith("on") && typeof val === "function") {
             el.addEventListener(key.slice(2).toLowerCase(), val);
-        } else if (key === "className") {
-            el.classList.add(...val.trim().split(" "));
+        } else if (key === "class-if" && typeof val === "function") {
+            const updateClass = () => {
+                const className = val();
+                el.className = className || ""; // Set the class name dynamically
+            };
+            updateClass(); // ✅ Run once on creation
+            State.set({ [`__update_${tag}`]: updateClass }); // ✅ Store for reactive updates
+            window.addEventListener("popstate", updateClass); // ✅ Update on navigation
+        } else if (key === "show-if" && typeof val === "function") {
+            const updateVisibility = () => {
+                el.style.display = val() ? "" : "none"; // ✅ Show/hide based on function return
+            };
+            updateVisibility(); // ✅ Run once on creation
+            State.set({ [`__update_show_${tag}`]: updateVisibility }); // ✅ Store for reactive updates
         } else if (key === "valid-if" && typeof val === "function") {
-            el.validIf = val; // ✅ Store valid-if as a property, not an attribute
+            el.validIf = val; // ✅ Store as a property, not an attribute
         } else {
             el.setAttribute(key, val);
         }
     });
 
-    // ✅ Automatically remove `_invalid` and trigger a state update on input change
     if (el.tagName === "INPUT" || el.tagName === "TEXTAREA" || el.tagName === "SELECT") {
         const bindKey = props["data-bind"];
         if (bindKey) {
             const clearInvalidState = () => {
                 if (State.get(`${bindKey}_invalid`)) {
-                    State.set({ [`${bindKey}_invalid`]: undefined }); // ✅ Clears _invalid
-                    State.set({ [`${bindKey}_valid`]: true }); // ✅ Also mark as valid
+                    State.set({ [`${bindKey}_invalid`]: undefined });
+                    State.set({ [`${bindKey}_valid`]: true });
                 }
             };
             el.addEventListener("input", clearInvalidState);
@@ -53,6 +64,7 @@ export const h = (tag, props = {}, ...children) => {
 
     return el;
 };
+
 
 
 

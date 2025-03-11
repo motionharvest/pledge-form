@@ -220,17 +220,13 @@ function trackOnShowElements() {
 }
 
 export function validate(groupName) {
-  // ✅ Select all elements inside a wrapper group="signup"
   const wrapper = document.querySelector(`[group="${groupName}"]`);
   const wrapperFields = wrapper ? [...wrapper.querySelectorAll("input, select, textarea")] : [];
 
-  // ✅ Select all elements that have group="signup" directly (even if outside the wrapper)
   const directFields = [...document.querySelectorAll(`[group="${groupName}"]:is(input, select, textarea)`)];
 
-  // ✅ Select all elements that are inside a group wrapper but are not inputs
   const extraFieldsInsideGroups = [...document.querySelectorAll(`[group="${groupName}"] input, select, textarea`)];
 
-  // ✅ Merge all the fields into one array
   const fields = [...new Set([...wrapperFields, ...directFields, ...extraFieldsInsideGroups])].filter(
     field => typeof field.validIf === "function"
   );
@@ -262,13 +258,11 @@ export function validate(groupName) {
     }
   });
 
-  // ✅ Update per-field validation state
   instance.set(validationStates);
-
-  // ✅ Also track group-wide validation state
   instance.set({ [`${groupName}_valid`]: allValid, [`${groupName}_invalid`]: !allValid });
-}
 
+  return allValid; // ✅ Return true if all fields are valid, false otherwise
+}
 
 
 

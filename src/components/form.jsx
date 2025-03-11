@@ -68,7 +68,9 @@ function setStep(num) {
 }
 
 function nextStep() {
-  if(data.step <= 10) {
+  let validity = validate("intro")
+  console.log(validity);
+  if(data.step <= 10 && validity) {
     const num = data.step += 1;
     State.set({
       "step": num,
