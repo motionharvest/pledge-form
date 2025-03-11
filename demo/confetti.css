@@ -1,0 +1,58 @@
+
+
+.confetti-container {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 10px;
+    height: 10px;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+}
+
+.confetti {
+    position: absolute;
+    width: 10px;
+    height: 20px;
+    opacity: 0;
+    transform: translate(0, 0) rotate(0deg);
+}
+
+/* Colors */
+.red { background-color: red; }
+.green { background-color: green; }
+.blue { background-color: blue; }
+.gray { background-color: gray; }
+.salmon { background-color: salmon; }
+
+/* Keyframe animation */
+@keyframes explode {
+    0% {
+        transform: translate(0, 0) rotate(0deg);
+        opacity: 1;
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        transform: translate(var(--x), var(--y)) rotate(var(--r));
+        opacity: 0;
+    }
+}
+
+/* Only animate when the checkbox is checked */
+#trigger:checked ~ .confetti-container .confetti {
+    animation: explode 1.5s ease-out forwards;
+}
+
+/* Generate multiple confetti pieces */
+.confetti:nth-child(1) { --x: -150px; --y: -200px; --r: 180deg; }
+.confetti:nth-child(2) { --x: 100px; --y: -250px; --r: 160deg; }
+.confetti:nth-child(3) { --x: -200px; --y: 150px; --r: 200deg; }
+.confetti:nth-child(4) { --x: 250px; --y: -150px; --r: 220deg; }
+.confetti:nth-child(5) { --x: -120px; --y: 180px; --r: 140deg; }
+.confetti:nth-child(6) { --x: 180px; --y: -100px; --r: 180deg; }
+.confetti:nth-child(7) { --x: -170px; --y: 130px; --r: 160deg; }
+.confetti:nth-child(8) { --x: 200px; --y: 200px; --r: 190deg; }
+.confetti:nth-child(9) { --x: -140px; --y: -220px; --r: 150deg; }
+.confetti:nth-child(10) { --x: 160px; --y: 170px; --r: 170deg; }

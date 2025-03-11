@@ -14,7 +14,7 @@ export const h = (tag, props, ...children) => {
     }
 
     if (typeof tag === 'function') {
-        return tag({ ...props }, children);
+        return tag({ ...props, children });
     }
 
     const el = document.createElement(tag);

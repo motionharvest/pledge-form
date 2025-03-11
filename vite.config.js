@@ -23,8 +23,8 @@ export default defineConfig({
         jsxFactory: 'h',
         jsxFragment: 'Fragment',
         jsxInject: `
-      import { h, Fragment } from '@/pragma.js';
-      import State, { updateDOM } from '@/reactive.js';
+      import { h, Fragment, navigate, routes } from '@/pragma.js';
+      import State, { updateDOM, validate, resetValidation } from '@/reactive.js';
       import jssLite from '@/utils/jss-lite.js';
       let data = State.getData();
     `

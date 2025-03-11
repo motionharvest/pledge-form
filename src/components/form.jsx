@@ -26,17 +26,17 @@ const stepNames = [
 
 export let Form = () => (
     <Fragment>
-        <div show-if="step=0"><Step0/></div>
-        <div show-if="step=1"><Step1/></div>
-        <div show-if="step=2"><Step2/></div>
-        <div show-if="step=3"><Step3/></div>
-        <div show-if="step=4"><Step4/></div>
-        <div show-if="step=5"><Step5/></div>
-        <div show-if="step=6"><Step6/></div>
-        <div show-if="step=7"><Step7/></div>
-        <div show-if="step=8"><Step8 setStep={setStep}/></div>
-        <div show-if="step=9"><Step9/></div>
-        <div show-if="step=10"><Step10/></div>
+        <div show-if="step==0"><Step0/></div>
+        <div show-if="step==1"><Step1/></div>
+        <div show-if="step==2"><Step2/></div>
+        <div show-if="step==3"><Step3/></div>
+        <div show-if="step==4"><Step4/></div>
+        <div show-if="step==5"><Step5/></div>
+        <div show-if="step==6"><Step6/></div>
+        <div show-if="step==7"><Step7/></div>
+        <div show-if="step==8"><Step8 setStep={setStep}/></div>
+        <div show-if="step==9"><Step9/></div>
+        <div show-if="step==10"><Step10/></div>
     </Fragment>
 );
 
