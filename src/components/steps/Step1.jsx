@@ -23,7 +23,7 @@ export let Step1 = (props) => (
         <div class="control-ui shadow-lg flex justify-center gap-4 mt-2 mb-2">
             <button onClick={() => props.setStep(0)} class="w-full bg-gray-600 hover:bg-gray-700 text-white py-2 mt-5 rounded-lg text-sm font-medium transition">Back</button>
 
-            <button onClick={() => props.setStep(2)} class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2 mt-5 rounded-lg text-sm font-medium transition">Next: </button>
+            <button onClick={() => props.setStep(2)} class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2 mt-5 rounded-lg text-sm font-medium transition">View Commitment Opportunities</button>
         </div>
     </>
 )

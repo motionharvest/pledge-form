@@ -22,9 +22,54 @@ export const h = (tag, props = {}, ...children) => {
 
     const el = document.createElement(tag);
 
+    // Object.entries(props || {}).forEach(([key, val]) => {
+    //     if (key.startsWith("on") && typeof val === "function") {
+    //         el.addEventListener(key.slice(2).toLowerCase(), val);
+    //     } else if (key === "class-if" && typeof val === "function") {
+    //         const updateClass = () => {
+    //             const className = val();
+    //             el.className = className || ""; // Set the class name dynamically
+    //         };
+    //         updateClass(); // ✅ Run once on creation
+    //         State.set({ [`__update_${tag}`]: updateClass }); // ✅ Store for reactive updates
+    //         window.addEventListener("popstate", updateClass); // ✅ Update on navigation
+    //     } else if (key === "show-if" && typeof val === "function") {
+    //         const updateVisibility = () => {
+    //             el.style.display = val() ? "" : "none"; // ✅ Show/hide based on function return
+    //         };
+    //         updateVisibility(); // ✅ Run once on creation
+    //         State.set({ [`__update_show_${tag}`]: updateVisibility }); // ✅ Store for reactive updates
+    //     } else if (key === "onShow" && typeof val === "function") {
+    //         el.onShow = val; // ✅ Store function as a property
+    //     } else if (key === "valid-if" && typeof val === "function") {
+    //         el.validIf = val; // ✅ Store as a property, not an attribute
+    //     } else {
+    //         el.setAttribute(key, val);
+    //     }
+    // });
+
     Object.entries(props || {}).forEach(([key, val]) => {
         if (key.startsWith("on") && typeof val === "function") {
-            el.addEventListener(key.slice(2).toLowerCase(), val);
+            if (key === "onShow") {
+                // ✅ IntersectionObserver to trigger when element is shown
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            val(el); // Call onShow function
+                        }
+                    });
+                }, { threshold: 0.1 });
+
+                requestAnimationFrame(() => {
+                    if (document.contains(el)) {
+                        observer.observe(el);
+                    }
+                });
+
+                el.onShow = val; // ✅ Store function as a property
+            } else {
+                el.addEventListener(key.slice(2).toLowerCase(), val);
+            }
         } else if (key === "class-if" && typeof val === "function") {
             const updateClass = () => {
                 const className = val();
@@ -45,6 +90,7 @@ export const h = (tag, props = {}, ...children) => {
             el.setAttribute(key, val);
         }
     });
+
 
     if (el.tagName === "INPUT" || el.tagName === "TEXTAREA" || el.tagName === "SELECT") {
         const bindKey = props["data-bind"];

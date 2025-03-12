@@ -11,18 +11,6 @@ import {Step9} from "./steps/Step9.jsx";
 import {Step10} from "./steps/Step10.jsx";
 
 
-const stepNames = [
-  "Sign and Continue",
-  "View Commitment Opportunities",
-  "Next: Annual Campaign",
-  "Next: Fundraising Support",
-  "Next: Host a Gathering",
-  "Next: Online Auctions",
-  "Next: Sponsorship Outreach",
-  "Next: Summary",
-  "Next: Payment",
-  "Complete My Pledge"
-]
 
 export let Form = () => (
     <Fragment>

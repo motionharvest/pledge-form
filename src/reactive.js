@@ -218,7 +218,6 @@ window.State = instance;
 export default instance;
 
 function trackOnShowElements() {
-  console.log("looking for elements")
   const elements = document.querySelectorAll("[onShow]");
 
   elements.forEach((element) => {
@@ -229,7 +228,7 @@ function trackOnShowElements() {
             const onShowFn = element.getAttribute("onShow");
             if (onShowFn) {
               try {
-                new Function("element", onShowFn)(element);
+                element.onShow(); // ✅ Call stored function
               } catch (e) {
                 console.error("Error executing onShow function:", e);
               }
