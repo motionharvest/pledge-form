@@ -145,50 +145,6 @@ function bindInputs(data) {
   });
 }
 
-// class State {
-//   constructor() {
-//     if (!State.instance) {
-//       let storedData = JSON.parse(localStorage.getItem("state")) || {};
-//       this.data = reactive(storedData, this.updateLocalStorage.bind(this));
-//       bindInputs(this.data);
-//       State.instance = this;
-
-//       // Initialize route state
-//       this.data.route = window.location.pathname;
-
-//       requestAnimationFrame(() => {
-//         Object.keys(this.data).forEach((key) => updateDOM(key, this.data[key]));
-//         updateVisibility();
-//         updateClasses();
-//       });
-//     }
-//     return State.instance;
-//   }
-
-//   updateLocalStorage(key, value) {
-//     localStorage.setItem("state", JSON.stringify(this.data));
-//     updateDOM(key, value);
-//     updateVisibility();
-//     updateClasses();
-//   }
-
-//   set(properties) {
-//     Object.entries(properties).forEach(([key, value]) => {
-//       this.data[key] = value;
-//     });
-//     updateVisibility();
-//     updateClasses();
-//   }
-
-//   get(key) {
-//     return this.data[key];
-//   }
-
-//   getData() {
-//     return this.data; // ✅ Now returns the full reactive state
-//   }
-// }
-
 class State {
   constructor() {
     if (!State.instance) {
@@ -262,6 +218,7 @@ window.State = instance;
 export default instance;
 
 function trackOnShowElements() {
+  console.log("looking for elements")
   const elements = document.querySelectorAll("[onShow]");
 
   elements.forEach((element) => {

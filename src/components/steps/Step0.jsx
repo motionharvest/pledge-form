@@ -1,5 +1,6 @@
 
-export let Step0 = () => (
+export let Step0 = (props) => (
+    <>
 
 <div class="container bg-white p-6 rounded-lg shadow-lg w-96" group="intro">
         <h2 class="text-center text-lg font-semibold mb-4">2025 Board of Directors Pledge</h2>
@@ -34,10 +35,15 @@ export let Step0 = () => (
                 <div show-if="step0_agree_invalid" class="red">Your participation is appreciated</div> 
             </label>
         </div>
+
+        
     </div>
 
+        <div class="control-ui shadow-lg flex justify-center gap-4 mt-2 mb-2">
+            <button show-if="step<10" onClick={() => validate("intro") && props.setStep(1)} class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2 mt-5 rounded-lg text-sm font-medium transition">Sign and Continue</button>
+        </div>
     
-
+</>
 )
 
 jssLite({

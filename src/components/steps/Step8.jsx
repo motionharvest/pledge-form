@@ -263,11 +263,11 @@ export let Step8 = (props) => (
         <div class="mb-32 bg-white p-6 rounded-lg shadow-lg max-w-2xl w-full">
             <h2 class="text-xl font-semibold">Sponsorship Outreach <a href="#" onClick={() => props.setStep(7)}>✏️edit</a></h2>
 
-            <div class="mt-6">
-                <p class="font-semibold" show-if="seasonSponsorship||masqueradeSponsorship||sponsorLeads||sponsorshipSupport">Yes! I will assist with sponsorship outreach for:</p>
+            <div class="mt-6" show-if="seasonSponsorship||masqueradeSponsorship||sponsorLeads||sponsorshipSupport">
+                <p class="font-semibold">Yes! I will assist with sponsorship outreach for:</p>
 
-                <div class="mt-3 space-y-4" show-if="seasonSponsorship">
-                    <label class="flex items-center space-x-2">
+                <div class="mt-3 space-y-4">
+                    <label class="flex items-center space-x-2" show-if="seasonSponsorship">
                         <input disabled="disabled" type="checkbox" data-bind="seasonSponsorship" class="w-5 h-5 text-indigo-600 border-gray-300 rounded"/>
                         <span class="text-gray-900">30th Anniversary Season Sponsorships</span>
                     </label>

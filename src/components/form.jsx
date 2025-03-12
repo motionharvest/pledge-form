@@ -26,8 +26,8 @@ const stepNames = [
 
 export let Form = () => (
     <Fragment>
-        <div show-if="step==0"><Step0/></div>
-        <div show-if="step==1"><Step1/></div>
+    <div show-if="step==0"><Step0 setStep={setStep} /></div>
+    <div show-if="step==1"><Step1 setStep={setStep} /></div>
         <div show-if="step==2"><Step2/></div>
         <div show-if="step==3"><Step3/></div>
         <div show-if="step==4"><Step4/></div>
@@ -61,38 +61,11 @@ jssLite({
 
 function setStep(num) {
     State.set({
-      "step": num,
-      "stepNameNext": stepNames[num],
-      "stepNameBack": stepNames[num - 1]
+      "step": num
     })
 }
 
-function nextStep() {
-  let validity = validate("intro")
-  console.log(validity);
-  if(data.step <= 10 && validity) {
-    const num = data.step += 1;
-    State.set({
-      "step": num,
-      "stepNameNext": stepNames[num],
-      "stepNameBack": stepNames[num - 1]
-    })
-  }
-}
-
-function prevStep() {
-  if(data.step >= 1) {
-    const num = data.step -= 1;
-    State.set({
-      "step": num,
-      "stepNameNext": stepNames[num],
-      "stepNameBack": stepNames[num - 1]
-    })
-  }
-}
 
 State.set({
-  "step": data.step || 0,
-  "stepNameNext": stepNames[data.step || 0],
-  "stepNameBack": stepNames[(data.step || 0) - 1]
+  "step": data.step || 0
 })

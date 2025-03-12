@@ -1,4 +1,4 @@
-import {Form, Nav} from '@/components/form.jsx';
+import {Form} from '@/components/form.jsx';
 
 // Log the reactive data object
 console.log("Loaded State:", data);
@@ -8,7 +8,6 @@ console.log("Loaded State:", data);
 let App = () => (
     <div id="app">
         <Form/>
-        <Nav/>
     </div>
 );
 

@@ -2,6 +2,8 @@ let totalAmtToday = State.get("totalAmtToday") || 0;
 let totalAmtLater = State.get("totalAmtLater") || 0;
 
 const checkAmt = () => {
+    
+
     let tallyToday = 0;
     let tallyLater = 0;
 
@@ -66,7 +68,7 @@ window.addEventListener("message", (event) => {
 });
 
 export let Step9 = () => (
-    <div class="container mb-32 bg-white p-6 rounded-lg shadow-lg max-w-2xl w-full" onShow={()=>checkAmt()}>
+    <div class="container mb-32 bg-white p-6 rounded-lg shadow-lg max-w-2xl w-full" onShow={() => checkAmt()}>
 
         <h2 class="text-xl font-semibold">Payment Methods</h2>
 
@@ -78,9 +80,9 @@ export let Step9 = () => (
         </p>
 
         <div class="mt-6">
-            <p class="font-semibold text-lg"><span show-if="!payNowSubmitted">Pay</span><span show-if="payNowSubmitted">Paid</span> today: $<span class="font-bold" data-bind="totalAmtToday"></span></p>
+            <p class="font-semibold text-lg"><span show-if="payNowSubmitted != true">Pay</span><span show-if="payNowSubmitted">Paid</span> today: $<span class="font-bold" data-bind="totalAmtToday"></span></p>
 
-            <button show-if="!payNowSubmitted" onClick={openDonorsnapForm} class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 mt-2 rounded-lg transition">
+            <button show-if="payNowSubmitted != true" onClick={openDonorsnapForm} class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 mt-2 rounded-lg transition">
                 Open Credit/ACH Payment Form
             </button>
             <label class="flex items-start space-x-2 mt-4">
