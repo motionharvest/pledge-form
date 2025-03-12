@@ -26,15 +26,13 @@ export let Step0 = () => (
         </div>
 
         <div class="flex mt-3 space-x-2">
-            <input type="checkbox" id="pledge" checked class="w-5 h-5 text-indigo-600 border-gray-300 rounded" valid-if={()=>{!State.get("step0_agree")}} data-bind="step0_agree"></input>
-            <label for="pledge" class="text-sm w-full text-gray-700 leading-tight" class-if="step0_agree">
+            <input type="checkbox" id="pledge" class="w-5 h-5 text-indigo-600 border-gray-300 rounded" valid-if={()=>State.get("step0_agree")} data-bind="step0_agree"></input>
+            <label for="pledge" class="text-sm w-full text-gray-700 leading-tight">
                 As a Board Member of Elm Shakespeare Company, I commit to strengthening and sustaining the organization 
                 in its 30th Anniversary year. I recognize that my leadership helps ensure the company’s impact in our 
                 community and that my actions inspire others to support Elm Shakespeare’s mission.
                 <div show-if="step0_agree_invalid" class="red">Your participation is appreciated</div> 
             </label>
-                 
-            
         </div>
     </div>
 

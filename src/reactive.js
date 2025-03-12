@@ -145,12 +145,57 @@ function bindInputs(data) {
   });
 }
 
+// class State {
+//   constructor() {
+//     if (!State.instance) {
+//       let storedData = JSON.parse(localStorage.getItem("state")) || {};
+//       this.data = reactive(storedData, this.updateLocalStorage.bind(this));
+//       bindInputs(this.data);
+//       State.instance = this;
+
+//       // Initialize route state
+//       this.data.route = window.location.pathname;
+
+//       requestAnimationFrame(() => {
+//         Object.keys(this.data).forEach((key) => updateDOM(key, this.data[key]));
+//         updateVisibility();
+//         updateClasses();
+//       });
+//     }
+//     return State.instance;
+//   }
+
+//   updateLocalStorage(key, value) {
+//     localStorage.setItem("state", JSON.stringify(this.data));
+//     updateDOM(key, value);
+//     updateVisibility();
+//     updateClasses();
+//   }
+
+//   set(properties) {
+//     Object.entries(properties).forEach(([key, value]) => {
+//       this.data[key] = value;
+//     });
+//     updateVisibility();
+//     updateClasses();
+//   }
+
+//   get(key) {
+//     return this.data[key];
+//   }
+
+//   getData() {
+//     return this.data; // ✅ Now returns the full reactive state
+//   }
+// }
+
 class State {
   constructor() {
     if (!State.instance) {
       let storedData = JSON.parse(localStorage.getItem("state")) || {};
       this.data = reactive(storedData, this.updateLocalStorage.bind(this));
       bindInputs(this.data);
+      this.subscribers = {}; // ✅ Pub-sub storage
       State.instance = this;
 
       // Initialize route state
@@ -175,7 +220,13 @@ class State {
   set(properties) {
     Object.entries(properties).forEach(([key, value]) => {
       this.data[key] = value;
+
+      // ✅ Notify subscribers
+      if (this.subscribers[key]) {
+        this.subscribers[key].forEach(callback => callback(value));
+      }
     });
+
     updateVisibility();
     updateClasses();
   }
@@ -187,10 +238,27 @@ class State {
   getData() {
     return this.data; // ✅ Now returns the full reactive state
   }
+
+  // ✅ Subscribe to state changes
+  subscribe(key, callback) {
+    if (!this.subscribers[key]) {
+      this.subscribers[key] = [];
+    }
+    this.subscribers[key].push(callback);
+
+    // ✅ Immediately call with current value
+    callback(this.data[key]);
+
+    // ✅ Return unsubscribe function
+    return () => {
+      this.subscribers[key] = this.subscribers[key].filter(cb => cb !== callback);
+    };
+  }
 }
 
 
 const instance = new State();
+window.State = instance;
 export default instance;
 
 function trackOnShowElements() {

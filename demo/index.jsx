@@ -1,4 +1,5 @@
 import "./confetti.css";
+import { TodoApp } from "./todo/TodoApp";
 
 // Log the reactive data object
 console.log("Loaded State:", data);
@@ -23,7 +24,9 @@ routes["/404"] = () => h("div", {}, "Page Not Found");
 
 // Main App Component
 let App = () => (
-    <>  
+    <>  <h1>Full Todo App</h1>
+        <TodoApp />
+        <br/>
         <h1>Validation</h1>
         <div group="signup" style="display: flex; flex-direction: column; gap: 10px; max-width: 300px;">
             <label>Username:</label>
@@ -167,6 +170,8 @@ let App = () => (
     </>
 );
 
+
+
 jssLite({
     ".blue": {
         color: "blue"
@@ -195,6 +200,26 @@ setTimeout(() => {
 }, 2000);
 
 // Mount the JSX component to the DOM
-const app = h(App);
-console.log("App Render Output:", app);
-document.body.appendChild(app);
+// const app = h(App);
+// console.log("App Render Output:", app);
+// document.body.appendChild(app);
+
+
+const render = () => {
+    const appRoot = document.getElementById("app");
+    if (!appRoot) {
+        console.error("No #app element found!");
+        return;
+    }
+    appRoot.innerHTML = ""; // ✅ Clear previous render
+    appRoot.appendChild(App()); // ✅ Re-run the main app component
+};
+
+// ✅ Ensure the app renders on initial load
+document.addEventListener("DOMContentLoaded", render);
+
+// ✅ Subscribe to state updates at the highest level
+State.subscribe("todos", render);
+State.subscribe("filter", render);
+State.subscribe("route", render); // If routing is involved
+
