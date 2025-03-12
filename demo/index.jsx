@@ -54,7 +54,7 @@ let App = () => (
                 <input
                     type="checkbox"
                     data-bind="accept_terms"
-                    valid-if={() => State.get("accept_terms") === true}
+                    valid-if={() => State.get("accept_terms") == true}
                 />
                 I agree to the terms and conditions
             </label>

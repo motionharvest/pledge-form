@@ -1,6 +1,7 @@
 body {
     padding: 2em 1em;
 }
+
 @keyframes fadeIn {
 	from {
 		opacity: 0;

@@ -53,10 +53,12 @@ export const h = (tag, props = {}, ...children) => {
                 if (State.get(`${bindKey}_invalid`)) {
                     State.set({ [`${bindKey}_invalid`]: undefined });
                     State.set({ [`${bindKey}_valid`]: true });
+                    el.classList.remove('invalid');
                 }
             };
             el.addEventListener("input", clearInvalidState);
             el.addEventListener("change", clearInvalidState);
+            el.addEventListener("focus", clearInvalidState);
         }
     }
 
