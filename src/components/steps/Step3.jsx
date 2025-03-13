@@ -1,6 +1,6 @@
 export let Step3 = (props) => (
   <>
-    <div class="container bg-white p-6 rounded-lg shadow-lg max-w-2xl w-full">
+        <div class="container mb-32 md:mb-4 bg-white p-6 rounded-lg shadow-lg max-w-2xl w-full">
         <h2 class="text-xl font-semibold">Annual Campaign</h2>
         <p class="text-gray-700 mt-1">
             Your dedication sustains Elm Shakespeare, ensuring the artistry, education, and community programs 
@@ -65,9 +65,9 @@ export let Step3 = (props) => (
         </div>
     </div>
     <div class="control-ui shadow-lg flex justify-center gap-4 mt-2 mb-2">
-            <button onClick={() => props.setStep(2)} class="w-full bg-gray-600 hover:bg-gray-700 text-white py-2 mt-5 rounded-lg text-sm font-medium transition">Back</button>
+            <button onClick={() => props.setStep(2)} class="w-full bg-gray-600 hover:bg-gray-700 text-white py-2 rounded-lg text-sm font-medium transition">Back</button>
 
-            <button onClick={() => props.setStep(4)} class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2 mt-5 rounded-lg text-sm font-medium transition">Next: Fundraising Support</button>
+            <button onClick={() => props.setStep(4)} class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2 rounded-lg text-sm font-medium transition">Next: Fundraising Support</button>
         </div>
     </>
 )

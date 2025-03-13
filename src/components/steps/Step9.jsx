@@ -58,46 +58,6 @@ const openDonorsnapForm = () => {
     
 }
 
-const sendDataToGoogleSheet = () => {
-    
-    const fieldOrder = [
-        "step0_name", "step0_email", "step0_phone", "step0_agree",
-        "step2_1_yes", "step2_2_yes",
-        "step2_3_3000", "step2_3_1000", "step2_3_750", "step2_3_other",
-        "step3_3_other-value", "paymentOption",
-        "totalPledgeCommitment", "oneTimeGiftToday", "oneTimeGift", "oneTimeGiftDate",
-        "monthlyPayments", "monthlyPaymentAmount", "monthlyPaymentStartDate",
-        "quarterlyPayments", "quarterlyPaymentAmount", "quarterlyPaymentStartDate",
-        "otherPaymentSchedule", "otherPaymentDetails",
-        "wineContribution", "wineBottleCount", "wineDeliveryDate",
-        "giftCardContribution", "restaurantNames", "giftCardDeliveryDate",
-        "hostFundraisingGathering", "preferredDates",
-        "attendFundraisingEvent", "partyHostNomination",
-        "inParkAuction", "masqueradeAuction", "otherAuctionSupport", "auctionSupportMessage",
-        "seasonSponsorship", "masqueradeSponsorship", "sponsorLeads", "sponsorLeadsInput", "sponsorshipSupport"
-    ];
-
-    // Collect data in order
-    const formData = {};
-    fieldOrder.forEach(key => {
-        data[key] = State.get(key) || ""; // Get value using State.get()
-    });
-
-    // Send data to Google Sheets
-    fetch("https://script.google.com/macros/s/AKfycbw67XYbLzAqgZMX_D91uH2rprQefoLbz8u6kjr_K5z-srtM0FxJPD1PR0DpvjNraj8y/exec", {
-        method: "POST",
-        mode: "no-cors", 
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data)
-    }).then(() => {
-        alert("Form submitted!");
-    }).catch(error => {
-        alert("Error submitting form");
-    });
-    
-
-}
-
 window.addEventListener("message", (event) => {
     if(event.data == "PaymentSubmitted") {
         State.set({
@@ -108,8 +68,8 @@ window.addEventListener("message", (event) => {
 
 export let Step9 = (props) => (
   <>
-    <div class="container mb-32 bg-white p-6 rounded-lg shadow-lg max-w-2xl w-full" onShow={() => checkAmt()}>
-        <button onClick={sendDataToGoogleSheet} class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 mt-2 rounded-lg transition">Send data to google sheet</button>
+        <div class="container mb-32 md:mb-4 bg-white p-6 rounded-lg shadow-lg max-w-2xl w-full" onShow={() => checkAmt()}>
+
         <h2 class="text-xl font-semibold">Payment Methods</h2>
 
         <p class="text-gray-700 mt-2">
@@ -122,9 +82,7 @@ export let Step9 = (props) => (
         <div class="mt-6">
             <p class="font-semibold text-lg"><span show-if="payNowSubmitted != true">Pay</span><span show-if="payNowSubmitted">Paid</span> today: $<span class="font-bold" data-bind="totalAmtToday"></span></p>
 
-            <button show-if="payNowSubmitted != true" onClick={openDonorsnapForm} class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 mt-2 rounded-lg transition">
-                Open Credit/ACH Payment Form
-            </button>
+            
             <label class="flex items-start space-x-2 mt-4">
                 <input type="checkbox" disabled="disabled" data-bind="payNowSubmitted" class="w-5 h-5 text-indigo-600 border-gray-300 rounded mt-1" />
                 <div>
@@ -166,9 +124,11 @@ export let Step9 = (props) => (
         </div>
     </div>
     <div class="control-ui shadow-lg flex justify-center gap-4 mt-2 mb-2">
-            <button onClick={() => props.setStep(8)} class="w-full bg-gray-600 hover:bg-gray-700 text-white py-2 mt-5 rounded-lg text-sm font-medium transition">Back</button>
+            <button onClick={() => props.setStep(8)} class="w-full bg-gray-600 hover:bg-gray-700 text-white py-2 rounded-lg text-sm font-medium transition">Back</button>
 
-            <button onClick={() => props.setStep(10)} class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2 mt-5 rounded-lg text-sm font-medium transition">Complete My Pledge</button>
+            <button show-if="payNowSubmitted" onClick={() => props.setStep(10)} class="w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded-lg text-sm font-medium transition">Complete My Pledge</button>
+
+            <button show-if={() => !State.get("payNowSubmitted")} onClick={openDonorsnapForm} class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2 rounded-lg text-sm font-medium transition">Open Payment Form</button>
         </div>
     </>
 )

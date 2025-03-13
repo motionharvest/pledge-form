@@ -1,4 +1,4 @@
-import {Form, Shield} from '@/components/form.jsx';
+import {Form} from '@/components/form.jsx';
 
 // Log the reactive data object
 console.log("Loaded State:", data);
@@ -7,7 +7,6 @@ console.log("Loaded State:", data);
 // Main App Component
 let App = () => (
     <div id="app">
-        <Shield/>
         <Form/>
     </div>
 );

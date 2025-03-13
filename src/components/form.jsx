@@ -36,17 +36,6 @@ export let Shield = () => (
   </div>
 )
 
-jssLite({
-  ".control-ui" : {
-    position: "fixed",
-    bottom: "0",
-    left: "0",
-    width: "100%",
-    padding: "1em",
-    background: "white"
-  }
-})
-
 function setStep(num) {
     State.set({
       "step": num
