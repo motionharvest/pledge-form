@@ -11,6 +11,8 @@ export let Step10 = (props) => (
 function sendToSheet() {
   alert("send logic here");
   State.set({
+
     "submittedTimestamp": "Put timestamp here"
+
   })
 }

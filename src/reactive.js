@@ -210,6 +210,49 @@ class State {
       this.subscribers[key] = this.subscribers[key].filter(cb => cb !== callback);
     };
   }
+  
+  reset(initialState = {}) {
+    // Clear all existing state properties
+    Object.keys(this.data).forEach(key => delete this.data[key]);
+
+    // Reset subscribers
+    this.subscribers = {};
+
+    // Restore initial state
+    Object.assign(this.data, initialState);
+
+    // Find all elements with `data-bind`, `show-if`, or `class-if` and reset them
+    document.querySelectorAll("[data-bind], [show-if], [class-if]").forEach(el => {
+        const bindKey = el.getAttribute("data-bind");
+        const showIf = el.getAttribute("show-if");
+        const classIf = el.getAttribute("class-if");
+
+        // Handle `data-bind`
+        if (bindKey) {
+            if (el.tagName === "INPUT") {
+                if (el.type === "checkbox" || el.type === "radio") {
+                    el.checked = !!initialState[bindKey]; // ✅ Check/uncheck based on state
+                } else {
+                    el.value = initialState[bindKey] || ""; // ✅ Reset text inputs
+                }
+            } else if (el.tagName === "TEXTAREA" || el.tagName === "SELECT") {
+                el.value = initialState[bindKey] || ""; // ✅ Reset textarea and select fields
+            } else {
+                el.textContent = initialState[bindKey] || ""; // ✅ Reset non-input elements
+            }
+        }
+
+        // Handle `show-if`
+        if (showIf && typeof this.data[showIf] === "function") {
+            el.style.display = this.data[showIf]() ? "" : "none"; // ✅ Show/hide element
+        }
+
+        // Handle `class-if`
+        if (classIf && typeof this.data[classIf] === "function") {
+            el.className = this.data[classIf]() || ""; // ✅ Apply correct class
+        }
+    });
+}
 }
 
 

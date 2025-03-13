@@ -54,10 +54,8 @@ function setStep(num) {
 }
 
 function resetForm() {
-  State.set({
-    "step": 0,
-    "submittedTimestamp": undefined,
-    
+  State.reset({
+    "step": 0
   })
 }
 
