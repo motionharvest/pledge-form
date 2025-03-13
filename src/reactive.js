@@ -40,6 +40,7 @@ export function updateVisibility() {
   });
 
   requestAnimationFrame(trackOnShowElements);
+  
 }
 
 function updateClasses() {
@@ -77,6 +78,10 @@ function evaluateSingleCondition(condition) {
   let match = false;
   let stateKey, operator, expectedValue;
 
+  if (condition.startsWith("!")) {
+    return !instance.get(condition.substring(1).trim()); // ✅ Properly negate the state value
+  }
+  
   // ✅ Keep Route Logic
   if (condition.startsWith("route~=")) {
     return instance.get("route").startsWith(condition.replace("route~=", "").trim());
@@ -87,6 +92,7 @@ function evaluateSingleCondition(condition) {
   if (condition.startsWith("route!=")) {
     return instance.get("route") !== condition.replace("route!=", "").trim();
   }
+  
 
   // ✅ Boolean/Exists check
   if (!/[=<>!~]|matches/.test(condition)) {
@@ -183,8 +189,9 @@ class State {
       }
     });
 
-    updateVisibility();
-    updateClasses();
+    // ✅ Ensure `show-if` elements update after state changes
+    requestAnimationFrame(updateVisibility);
+    requestAnimationFrame(updateClasses);
   }
 
   get(key) {

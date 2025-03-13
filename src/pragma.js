@@ -5,9 +5,6 @@ export const Fragment = Symbol("Fragment");
 export let route = State.get("route");
 
 export const h = (tag, props = {}, ...children) => {
-    if (tag instanceof HTMLElement || tag instanceof SVGElement) {
-        return tag;
-    }
     
     if (typeof tag === "function") {
         return tag({ ...props, children, route: State.get("route") });
@@ -23,21 +20,9 @@ export const h = (tag, props = {}, ...children) => {
         console.error("Invalid tag passed to h():", tag);
         return document.createComment("Invalid component");
     }
-
-    // ✅ Check if it's an SVG element
-    const isSvg = ["svg", "path", "circle", "rect", "line", "polygon", "polyline", "text", "g", "use", "defs"].includes(tag);
-
-    // ✅ Use `createElementNS` for SVG elements
-    const el = isSvg
-        ? document.createElementNS("http://www.w3.org/2000/svg", tag)
-        : document.createElement(tag);
-
-    if (tag === "svg") {
-        el.setAttribute("xmlns", "http://www.w3.org/2000/svg");
-        el.setAttribute("xmlns:xlink", "http://www.w3.org/1999/xlink");
-    }
-
-
+    
+    const el = document.createElement(tag);
+    
     Object.entries(props || {}).forEach(([key, val]) => {
         if (key.startsWith("on") && typeof val === "function") {
             if (key === "onShow") {
@@ -61,6 +46,18 @@ export const h = (tag, props = {}, ...children) => {
                 el.addEventListener(key.slice(2).toLowerCase(), val);
             }
         } else if (key === "class-if" && typeof val === "function") {
+            const updateVisibility = () => {
+                el.style.display = val() ? "" : "none"; // ✅ Show/hide based on function return
+            };
+
+            updateVisibility(); // ✅ Run once on creation
+
+            // ✅ Subscribe to state changes to ensure updates
+            const boundKey = val.toString().match(/State\.get\(["'](.+?)["']\)/);
+            if (boundKey && boundKey[1]) {
+                State.subscribe(boundKey[1], updateVisibility);
+            }
+
             const updateClass = () => {
                 const className = val();
                 el.className = className || ""; // Set the class name dynamically
@@ -76,10 +73,6 @@ export const h = (tag, props = {}, ...children) => {
             State.set({ [`__update_show_${tag}`]: updateVisibility }); // ✅ Store for reactive updates
         } else if (key === "valid-if" && typeof val === "function") {
             el.validIf = val; // ✅ Store as a property, not an attribute
-        } else if (isSvg && key === "href") {
-            el.setAttributeNS(null, "href", val); // ✅ Ensures `href` is used, not `xlink:href`
-        } else if (isSvg && ["stroke", "fill", "viewBox", "cx", "cy", "r", "x", "y", "width", "height"].includes(key)) {
-            el.setAttributeNS(null, key, val); // ✅ Properly set SVG attributes
         } else {
             el.setAttribute(key, val);
         }

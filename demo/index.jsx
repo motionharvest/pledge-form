@@ -1,5 +1,4 @@
 import "./confetti.css";
-import { TodoApp } from "./todo/TodoApp";
 
 // Log the reactive data object
 console.log("Loaded State:", data);
@@ -24,8 +23,7 @@ routes["/404"] = () => h("div", {}, "Page Not Found");
 
 // Main App Component
 let App = () => (
-    <>  <h1>Full Todo App</h1>
-        <TodoApp />
+    <>  
         <br/>
         <h1>Validation</h1>
         <div group="signup" style="display: flex; flex-direction: column; gap: 10px; max-width: 300px;">
@@ -33,7 +31,7 @@ let App = () => (
             <input
                 type="text"
                 data-bind="username"
-                valid-if={() => State.get("username").length >= 3}
+                valid-if={() => State.get("username") && State.get("username").length >= 3}
             />
             <div show-if="username_invalid" class="bad">Username must be at least 3 characters</div>
 
@@ -41,7 +39,7 @@ let App = () => (
             <input
                 type="password"
                 data-bind="password"
-                valid-if={() => State.get("password").length >= 6}
+                valid-if={() => State.get("password") && State.get("password").length >= 6}
             />
             <div show-if="password_invalid" class="bad">Password must be at least 6 characters</div>
 
@@ -50,7 +48,7 @@ let App = () => (
                 type="email"
                 data-bind="email"
                 group="signup"
-                valid-if={() => State.get("email").includes('@')}
+                valid-if={() => State.get("email") && State.get("email").includes('@')}
             />
             <div show-if="email_invalid" class="bad">Email must include '@'</div>
             <label>

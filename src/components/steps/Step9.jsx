@@ -59,6 +59,7 @@ const openDonorsnapForm = () => {
 }
 
 window.addEventListener("message", (event) => {
+    console.log("message Posted", event)
     if(event.data == "PaymentSubmitted") {
         State.set({
             payNowSubmitted: true
@@ -80,13 +81,14 @@ export let Step9 = (props) => (
         </p>
 
         <div class="mt-6">
-            <p class="font-semibold text-lg"><span show-if="payNowSubmitted != true">Pay</span><span show-if="payNowSubmitted">Paid</span> today: $<span class="font-bold" data-bind="totalAmtToday"></span></p>
+            <p class="font-semibold text-lg"><span show-if="!payNowSubmitted">Pay</span><span show-if="payNowSubmitted">Paid</span> today: $<span class="font-bold" data-bind="totalAmtToday"></span></p>
 
-            
-            <label class="flex items-start space-x-2 mt-4">
+                <button show-if="!payNowSubmitted" onClick={openDonorsnapForm} class="p-4 pl-12 pr-12 bg-indigo-600 hover:bg-indigo-700 text-white py-2 rounded-lg text-sm font-medium transition">Open Payment Form</button>
+                <label class="flex items-start space-x-2 mt-4" show-if="payNowSubmitted">
                 <input type="checkbox" disabled="disabled" data-bind="payNowSubmitted" class="w-5 h-5 text-indigo-600 border-gray-300 rounded mt-1" />
+                    
                 <div>
-                    <span class="font-semibold text-gray-900">Payment sent</span>
+                        <span class="font-semibold text-gray-900">Payment sent</span>
                 </div>
             </label>
         </div>
@@ -98,7 +100,7 @@ export let Step9 = (props) => (
                 <label class="flex items-start space-x-2">
                     <input type="checkbox" data-bind="payLaterCheck" class="w-5 h-5 text-indigo-600 border-gray-300 rounded mt-1" />
                     <div>
-                        <span class="font-semibold text-gray-900">I’ll pay later via Check</span>
+                        <span class="font-semibold text-gray-900">I’ll pay via Check</span>
                         <p class="text-gray-600 text-sm italic">Make checks payable to Elm Shakespeare Company</p>
                     </div>
                 </label>
@@ -128,7 +130,7 @@ export let Step9 = (props) => (
 
             <button show-if="payNowSubmitted" onClick={() => props.setStep(10)} class="w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded-lg text-sm font-medium transition">Complete My Pledge</button>
 
-            <button show-if={() => !State.get("payNowSubmitted")} onClick={openDonorsnapForm} class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2 rounded-lg text-sm font-medium transition">Open Payment Form</button>
+            <button show-if="!payNowSubmitted" onClick={openDonorsnapForm} class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2 rounded-lg text-sm font-medium transition">Open Payment Form</button>
         </div>
     </>
 )
