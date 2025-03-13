@@ -83,12 +83,13 @@ export let Step9 = (props) => (
         <div class="mt-6">
             <p class="font-semibold text-lg"><span show-if="!payNowSubmitted">Pay</span><span show-if="payNowSubmitted">Paid</span> today: $<span class="font-bold" data-bind="totalAmtToday"></span></p>
 
-                <button show-if="!payNowSubmitted" onClick={openDonorsnapForm} class="p-4 pl-12 pr-12 bg-indigo-600 hover:bg-indigo-700 text-white py-2 rounded-lg text-sm font-medium transition">Open Payment Form</button>
+                <button show-if="!payNowSubmitted" onClick={openDonorsnapForm} class="p-4 pl-12 pr-12 bg-indigo-600 hover:bg-indigo-700 text-white mt-2 py-2 rounded-lg text-sm font-medium transition">Open Payment Form</button>
+                <div show-if="!payNowSubmitted" class="mt-4">If you submitted your payment and are stuck on this screen <span class="underline "><a href="#" onClick={() => State.set({payNowSubmitted: true})}>click here.</a></span></div>
                 <label class="flex items-start space-x-2 mt-4" show-if="payNowSubmitted">
-                <input type="checkbox" disabled="disabled" data-bind="payNowSubmitted" class="w-5 h-5 text-indigo-600 border-gray-300 rounded mt-1" />
+                <input type="checkbox" disabled="disabled" data-bind="payNowSubmitted" class="fadeIn w-5 h-5 text-indigo-600 border-gray-300 rounded mt-1" />
                     
                 <div>
-                        <span class="font-semibold text-gray-900">Payment sent</span>
+                        <span class="fadeIn font-semibold text-gray-900">Payment sent</span>
                 </div>
             </label>
         </div>
@@ -109,9 +110,10 @@ export let Step9 = (props) => (
                     <input type="checkbox" data-bind="payLaterStockTransfer" class="w-5 h-5 text-indigo-600 border-gray-300 rounded mt-1" />
                     <div>
                         <span class="font-semibold text-gray-900">I’ll pay later via Stock Transfer</span>
-                        <button class="w-full border border-blue-600 text-blue-600 hover:bg-blue-50 font-medium py-2 mt-2 rounded-lg transition flex items-center justify-center">
+                            <p class="text-gray-600 text-sm italic">We’ll reach out to you for more information</p>
+                        {/* <button class="w-full border border-blue-600 text-blue-600 hover:bg-blue-50 font-medium py-2 mt-2 rounded-lg transition flex items-center justify-center">
                             <span class="mr-4 ml-4">Download Stock Transfer Form</span>
-                        </button>
+                        </button> */}
                     </div>
                 </label>
 

@@ -3,12 +3,12 @@ export let Step10 = (props) => (
   <>
     <div class="container bg-white p-6 rounded-lg shadow-lg max-w-2xl w-full" onShow={() => !State.get("submittedTimestamp") && sendDataToGoogleSheet()}>
         <h2 class="text-xl font-semibold">
-        <span class="font-bold">Your pledge form <span show-if="!submittedTimestamp">is being sent.</span><span show-if="submittedTimestamp">has been received.</span></span>
+        <span class="font-bold">Your pledge form <span show-if="!submittedTimestamp">is being sent.</span><span show-if="submittedTimestamp">has been sent.</span></span>
         </h2>
       <div show-if="submittedTimestamp">
-        <h3>We are reviewing your pledge, and will contact you soon.</h3>
+        <h3>We will review it, and be in touch. You can now close this tab.</h3>
           <p class="text-gray-700 mt-2">
-          Your answers were submitted on <span data-bind="submittedTimestamp"></span>
+          Submitted: <span data-bind="submittedTimestamp"></span>
           </p>
           
           <p style="display: flex; justify-content: center;">

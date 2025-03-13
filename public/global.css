@@ -13,7 +13,7 @@ body {
 	}
 }
 
-.container {
+.container, .fadeIn{
    animation: fadeIn .5s forwards; 
 }
 
