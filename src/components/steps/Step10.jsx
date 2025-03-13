@@ -1,6 +1,6 @@
 export let Step10 = (props) => (
   <>
-    <div class="container bg-white p-6 rounded-lg shadow-lg max-w-2xl w-full">
+    <div class="container bg-white p-6 rounded-lg shadow-lg max-w-2xl w-full" onShow={()=>alert("Should put the form submission here")}>
         <h2 class="text-xl font-semibold">
             <span class="font-bold">Thank You</span>
         </h2>

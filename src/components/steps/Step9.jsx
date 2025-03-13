@@ -58,6 +58,46 @@ const openDonorsnapForm = () => {
     
 }
 
+const sendDataToGoogleSheet = () => {
+    
+    const fieldOrder = [
+        "step0_name", "step0_email", "step0_phone", "step0_agree",
+        "step2_1_yes", "step2_2_yes",
+        "step2_3_3000", "step2_3_1000", "step2_3_750", "step2_3_other",
+        "step3_3_other-value", "paymentOption",
+        "totalPledgeCommitment", "oneTimeGiftToday", "oneTimeGift", "oneTimeGiftDate",
+        "monthlyPayments", "monthlyPaymentAmount", "monthlyPaymentStartDate",
+        "quarterlyPayments", "quarterlyPaymentAmount", "quarterlyPaymentStartDate",
+        "otherPaymentSchedule", "otherPaymentDetails",
+        "wineContribution", "wineBottleCount", "wineDeliveryDate",
+        "giftCardContribution", "restaurantNames", "giftCardDeliveryDate",
+        "hostFundraisingGathering", "preferredDates",
+        "attendFundraisingEvent", "partyHostNomination",
+        "inParkAuction", "masqueradeAuction", "otherAuctionSupport", "auctionSupportMessage",
+        "seasonSponsorship", "masqueradeSponsorship", "sponsorLeads", "sponsorLeadsInput", "sponsorshipSupport"
+    ];
+
+    // Collect data in order
+    const formData = {};
+    fieldOrder.forEach(key => {
+        data[key] = State.get(key) || ""; // Get value using State.get()
+    });
+
+    // Send data to Google Sheets
+    fetch("https://script.google.com/macros/s/AKfycbw67XYbLzAqgZMX_D91uH2rprQefoLbz8u6kjr_K5z-srtM0FxJPD1PR0DpvjNraj8y/exec", {
+        method: "POST",
+        mode: "no-cors", 
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+    }).then(() => {
+        alert("Form submitted!");
+    }).catch(error => {
+        alert("Error submitting form");
+    });
+    
+
+}
+
 window.addEventListener("message", (event) => {
     if(event.data == "PaymentSubmitted") {
         State.set({
@@ -69,7 +109,7 @@ window.addEventListener("message", (event) => {
 export let Step9 = (props) => (
   <>
     <div class="container mb-32 bg-white p-6 rounded-lg shadow-lg max-w-2xl w-full" onShow={() => checkAmt()}>
-
+        <button onClick={sendDataToGoogleSheet} class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 mt-2 rounded-lg transition">Send data to google sheet</button>
         <h2 class="text-xl font-semibold">Payment Methods</h2>
 
         <p class="text-gray-700 mt-2">

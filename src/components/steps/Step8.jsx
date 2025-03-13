@@ -301,11 +301,3 @@ export let Step8 = (props) => (
         </div>
     </>
 )
-
-function setStep(num) {
-    State.set({
-      "step": num,
-      "stepNameNext": stepNames[num],
-      "stepNameBack": stepNames[num - 1]
-    })
-}
