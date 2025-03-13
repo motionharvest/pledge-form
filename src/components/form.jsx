@@ -28,11 +28,11 @@ export let Form = () => (
     </Fragment>
 );
 
-export let Nav = () => (
-  <div class="control-ui shadow-lg flex justify-center gap-4 mt-2 mb-2">
-    <button show-if="step>0" onClick={() => prevStep()} class="w-full bg-gray-600 hover:bg-gray-700 text-white py-2 mt-5 rounded-lg text-sm font-medium transition">Back</button>
-
-    <button show-if="step<10" onClick={() => nextStep()} class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2 mt-5 rounded-lg text-sm font-medium transition" data-bind="stepNameNext"></button>
+export let Shield = () => (
+  <div show-if="submittedTimestamp" class="shadow-lg flex justify-center gap-4 mt-2 mb-2">
+    <h1>Thank you for your submission</h1>
+    <p>Sent sucessfully on <span data-bind="submittedTimeStamp"></span></p>
+    <button onClick={resetForm}>Reset form</button>
   </div>
 )
 
@@ -51,6 +51,14 @@ function setStep(num) {
     State.set({
       "step": num
     })
+}
+
+function resetForm() {
+  State.set({
+    "step": 0,
+    "submittedTimestamp": undefined,
+    
+  })
 }
 
 
