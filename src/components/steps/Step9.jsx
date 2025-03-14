@@ -48,6 +48,10 @@ const checkAmt = (props) => {
 }
 let childWindow;
 const openDonorsnapForm = () => {
+    State.set({
+        "donorsnapFormOpened": true
+    });
+
     let fullName = State.get("step0_name").trim();
     let [firstName, lastName] = fullName.split(/\s+(.+)/)
     let email = State.get("step0_email").trim();
@@ -96,7 +100,7 @@ export let Step9 = (props) => (
             <p class="font-semibold text-lg"><span show-if="!payNowSubmitted">Pay</span><span show-if="payNowSubmitted">Paid</span> today: $<span class="font-bold" data-bind="totalAmtToday"></span></p>
 
                 <button show-if="!payNowSubmitted && totalAmtToday>0" onClick={openDonorsnapForm} class="p-4 pl-12 pr-12 bg-indigo-600 hover:bg-indigo-700 text-white py-2 rounded-lg text-sm font-medium transition">Open Payment Form</button>
-                <div show-if="!payNowSubmitted" class="mt-4">If you submitted your payment and are stuck on this screen <span class="underline "><a href="#" onClick={() => State.set({payNowSubmitted: true})}>click here.</a></span></div>
+                <div show-if="donorsnapFormOpened && !payNowSubmitted" class="mt-4">If you submitted your payment and are stuck on this screen <span class="underline "><a href="#" onClick={() => State.set({payNowSubmitted: true})}>click here.</a></span></div>
 
                 <label class="flex items-start space-x-2 mt-4" show-if="payNowSubmitted">
                 <input type="checkbox" disabled="disabled" data-bind="payNowSubmitted" class="fadeIn w-5 h-5 text-indigo-600 border-gray-300 rounded mt-1" />
@@ -107,7 +111,7 @@ export let Step9 = (props) => (
             </label>
         </div>
 
-        <div class="mt-6">
+            <div class="mt-6" show-if="totalAmtLater>0">
             <p class="font-semibold text-lg">Pay later: $<span class="font-bold" data-bind="totalAmtLater"></span></p>
 
             <div class="mt-4 space-y-4">
