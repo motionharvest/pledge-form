@@ -1,4 +1,5 @@
 import "./confetti.css";
+import { TodoApp } from "./todo/TodoApp";
 
 // Log the reactive data object
 console.log("Loaded State:", data);
@@ -167,6 +168,7 @@ let App = () => (
         <div show-if="step==2 || isVisible">This shows when `step` is 2 OR `isVisible` is true.</div>
         <div show-if={() => State.get("isVisible")}>This shows when `isVisible` is true. Using function syntax</div>
         <div show-if={() => !State.get("isVisible")}>This shows when `isVisible` is false. Using function syntax</div>
+        <TodoApp/>
     </>
 );
 
