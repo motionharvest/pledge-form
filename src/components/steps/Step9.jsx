@@ -58,6 +58,18 @@ const openDonorsnapForm = () => {
     
 }
 
+const showFormOpenButton = () => {
+  let tat = State.get("totalAmtToday");
+  let tat_int = parseInt(tat.replace(/,/g, ""), 10);
+  let pns = State.get("payNowSubmitted");
+  
+  if (tat_int > 0 && !pns) {
+    return true
+  } else {
+    return false
+  }
+}
+
 window.addEventListener("message", (event) => {
     console.log("message Posted", event)
     if(event.data == "PaymentSubmitted") {
@@ -83,7 +95,7 @@ export let Step9 = (props) => (
         <div class="mt-6">
             <p class="font-semibold text-lg"><span show-if="!payNowSubmitted">Pay</span><span show-if="payNowSubmitted">Paid</span> today: $<span class="font-bold" data-bind="totalAmtToday"></span></p>
 
-                <button show-if="!payNowSubmitted" onClick={openDonorsnapForm} class="p-4 pl-12 pr-12 bg-indigo-600 hover:bg-indigo-700 text-white py-2 rounded-lg text-sm font-medium transition">Open Payment Form</button>
+                <button show-if="!payNowSubmitted && totalAmtToday>0" onClick={openDonorsnapForm} class="p-4 pl-12 pr-12 bg-indigo-600 hover:bg-indigo-700 text-white py-2 rounded-lg text-sm font-medium transition">Open Payment Form</button>
                 <label class="flex items-start space-x-2 mt-4" show-if="payNowSubmitted">
                 <input type="checkbox" disabled="disabled" data-bind="payNowSubmitted" class="w-5 h-5 text-indigo-600 border-gray-300 rounded mt-1" />
                     
@@ -128,9 +140,9 @@ export let Step9 = (props) => (
     <div class="control-ui shadow-lg flex justify-center gap-4 mt-2 mb-2">
             <button onClick={() => props.setStep(8)} class="w-full bg-gray-600 hover:bg-gray-700 text-white py-2 rounded-lg text-sm font-medium transition">Back</button>
 
-            <button show-if="payNowSubmitted" onClick={() => props.setStep(10)} class="w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded-lg text-sm font-medium transition">Complete My Pledge</button>
+            <button show-if="payNowSubmitted || totalAmtToday==0" onClick={() => props.setStep(10)} class="w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded-lg text-sm font-medium transition">Complete My Pledge</button>
 
-            <button show-if="!payNowSubmitted" onClick={openDonorsnapForm} class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2 rounded-lg text-sm font-medium transition">Open Payment Form</button>
+            <button show-if="!payNowSubmitted && totalAmtToday>0" onClick={openDonorsnapForm} class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2 rounded-lg text-sm font-medium transition">Open Payment Form</button>
         </div>
     </>
 )
