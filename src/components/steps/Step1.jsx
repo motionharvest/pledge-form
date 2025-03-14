@@ -13,11 +13,16 @@ export let Step1 = (props) => (
                 this celebratory season by completing the enclosed form. This is how you 
                 lead by example and make a direct impact.
             </p>
-        </div>
 
-        <p class="mt-6 text-gray-700 text-lg font-medium">
+            <p class="mt-6 text-gray-700 text-lg font-medium">
             Estimated time to complete: <span class="font-bold">10-15 minutes</span>
         </p>
+        <p class="mt-6 text-gray-700 text-sm">
+            Note: This form remembers your answers so you can close it without losing your work.
+        </p>
+        </div>
+
+        
     </div>
     
         <div class="control-ui shadow-lg flex justify-center gap-4 mt-2 mb-2">

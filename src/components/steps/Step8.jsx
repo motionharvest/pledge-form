@@ -1,8 +1,11 @@
 export let Step8 = (props) => (
   <>
     <div class="container">
-
+            <h1 class="text-4xl">In Summary</h1>
         <div class="mb-4 bg-white p-6 rounded-lg shadow-lg max-w-2xl w-full">
+
+                
+
             <h2 class="text-xl font-semibold">Great Give - Director’s Circle <a href="#" onClick={() => props.setStep(2)}>✏️edit</a></h2>
 
             

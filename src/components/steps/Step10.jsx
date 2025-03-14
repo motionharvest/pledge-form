@@ -42,7 +42,7 @@ const sendDataToGoogleSheet = () => {
         "hostFundraisingGathering", "preferredDates",
         "attendFundraisingEvent", "partyHostNomination",
         "inParkAuction", "masqueradeAuction", "otherAuctionSupport", "auctionSupportMessage",
-        "seasonSponsorship", "masqueradeSponsorship", "sponsorLeads", "sponsorLeadsInput", "sponsorshipSupport"
+      "seasonSponsorship", "masqueradeSponsorship", "sponsorLeads", "sponsorLeadsInput", "sponsorshipSupport", "totalAmtToday", "totalAmtLater", "payLaterCheck", "payLaterStockTransfer", "payLaterDAF"
     ];
 
     // Collect data in order
@@ -52,7 +52,7 @@ const sendDataToGoogleSheet = () => {
     });
 
     // Send data to Google Sheets
-    fetch("https://script.google.com/macros/s/AKfycbw67XYbLzAqgZMX_D91uH2rprQefoLbz8u6kjr_K5z-srtM0FxJPD1PR0DpvjNraj8y/exec", {
+  fetch("https://script.google.com/macros/s/AKfycbxHcbe8FmjrVtSD8shFn1LmTv0YSjVS0UTz2SQOR8_preUvi5Ye61KGEIirqIQc4Lu7/exec", {
         method: "POST",
         mode: "no-cors", 
         headers: { "Content-Type": "application/json" },
