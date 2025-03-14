@@ -66,11 +66,23 @@ export const h = (tag, props = {}, ...children) => {
             State.set({ [`__update_${tag}`]: updateClass }); // ✅ Store for reactive updates
             window.addEventListener("popstate", updateClass); // ✅ Update on navigation
         } else if (key === "show-if" && typeof val === "function") {
-            const updateVisibility = () => {
-                el.style.display = val() ? "" : "none"; // ✅ Show/hide based on function return
-            };
-            updateVisibility(); // ✅ Run once on creation
-            State.set({ [`__update_show_${tag}`]: updateVisibility }); // ✅ Store for reactive updates
+            if (typeof val === "function") {
+                // ✅ Function-based `show-if`
+                const updateVisibility = () => {
+                    el.style.display = val() ? "" : "none";
+                };
+
+                updateVisibility(); // ✅ Run once on creation
+
+                // ✅ Subscribe to state changes
+                const boundKey = val.toString().match(/State\.get\(["'](.+?)["']\)/);
+                if (boundKey && boundKey[1]) {
+                    State.subscribe(boundKey[1], updateVisibility);
+                }
+            } else {
+                // ✅ String-based `show-if`
+                el.setAttribute("show-if", val);
+            }
         } else if (key === "valid-if" && typeof val === "function") {
             el.validIf = val; // ✅ Store as a property, not an attribute
         } else {

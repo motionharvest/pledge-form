@@ -161,10 +161,12 @@ let App = () => (
         <div show-if="age>21">This is visible when `age` is **greater than** `21`.</div>
 
         <h2>Combining Conditions</h2>
-        <button onClick={() => State.set({ step: 1, isVisible: true })}>Step 1 + Visible</button>
-        <button onClick={() => State.set({ step: 2, isVisible: false })}>Step 2 + Hidden</button>
+        <button onClick={() => State.set({ step: 1, isVisible: true })}>Step 1 + isVisible = true</button>
+        <button onClick={() => State.set({ step: 2, isVisible: false })}>Step 2 + isVisible = false</button>
         <div show-if="step==1 && isVisible">This shows when `step` is 1 AND `isVisible` is true.</div>
-        <div show-if="step==1 || isVisible">This shows when `step` is 1 OR `isVisible` is true.</div>
+        <div show-if="step==2 || isVisible">This shows when `step` is 2 OR `isVisible` is true.</div>
+        <div show-if={() => State.get("isVisible")}>This shows when `isVisible` is true. Using function syntax</div>
+        <div show-if={() => !State.get("isVisible")}>This shows when `isVisible` is false. Using function syntax</div>
     </>
 );
 

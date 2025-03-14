@@ -35,8 +35,20 @@ export function updateDOM(key, value) {
 
 export function updateVisibility() {
   document.querySelectorAll("[show-if]").forEach((element) => {
-    const condition = element.getAttribute("show-if").trim();
-    element.style.display = evaluateCondition(condition) ? "" : "none";
+    const condition = element.getAttribute("show-if");
+
+    let shouldShow = false;
+
+    // ✅ Handle function-based `show-if`
+    if (typeof element.showIf === "function") {
+      shouldShow = element.showIf();
+    }
+    // ✅ Handle string-based `show-if`
+    else if (condition) {
+      shouldShow = evaluateCondition(condition.trim());
+    }
+
+    element.style.display = shouldShow ? "" : "none";
   });
 
   requestAnimationFrame(trackOnShowElements);

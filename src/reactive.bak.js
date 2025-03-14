@@ -40,6 +40,7 @@ export function updateVisibility() {
   });
 
   requestAnimationFrame(trackOnShowElements);
+
 }
 
 function updateClasses() {
@@ -77,6 +78,10 @@ function evaluateSingleCondition(condition) {
   let match = false;
   let stateKey, operator, expectedValue;
 
+  if (condition.startsWith("!")) {
+    return !instance.get(condition.substring(1).trim()); // ✅ Properly negate the state value
+  }
+
   // ✅ Keep Route Logic
   if (condition.startsWith("route~=")) {
     return instance.get("route").startsWith(condition.replace("route~=", "").trim());
@@ -87,6 +92,7 @@ function evaluateSingleCondition(condition) {
   if (condition.startsWith("route!=")) {
     return instance.get("route") !== condition.replace("route!=", "").trim();
   }
+
 
   // ✅ Boolean/Exists check
   if (!/[=<>!~]|matches/.test(condition)) {
@@ -151,6 +157,7 @@ class State {
       let storedData = JSON.parse(localStorage.getItem("state")) || {};
       this.data = reactive(storedData, this.updateLocalStorage.bind(this));
       bindInputs(this.data);
+      this.subscribers = {}; // ✅ Pub-sub storage
       State.instance = this;
 
       // Initialize route state
@@ -175,9 +182,16 @@ class State {
   set(properties) {
     Object.entries(properties).forEach(([key, value]) => {
       this.data[key] = value;
+
+      // ✅ Notify subscribers
+      if (this.subscribers[key]) {
+        this.subscribers[key].forEach(callback => callback(value));
+      }
     });
-    updateVisibility();
-    updateClasses();
+
+    // ✅ Ensure `show-if` elements update after state changes
+    requestAnimationFrame(updateVisibility);
+    requestAnimationFrame(updateClasses);
   }
 
   get(key) {
@@ -187,10 +201,70 @@ class State {
   getData() {
     return this.data; // ✅ Now returns the full reactive state
   }
+
+  // ✅ Subscribe to state changes
+  subscribe(key, callback) {
+    if (!this.subscribers[key]) {
+      this.subscribers[key] = [];
+    }
+    this.subscribers[key].push(callback);
+
+    // ✅ Immediately call with current value
+    callback(this.data[key]);
+
+    // ✅ Return unsubscribe function
+    return () => {
+      this.subscribers[key] = this.subscribers[key].filter(cb => cb !== callback);
+    };
+  }
+
+  reset(initialState = {}) {
+    // Clear all existing state properties
+    Object.keys(this.data).forEach(key => delete this.data[key]);
+
+    // Reset subscribers
+    this.subscribers = {};
+
+    // Restore initial state
+    Object.assign(this.data, initialState);
+
+    // Find all elements with `data-bind`, `show-if`, or `class-if` and reset them
+    document.querySelectorAll("[data-bind], [show-if], [class-if]").forEach(el => {
+      const bindKey = el.getAttribute("data-bind");
+      const showIf = el.getAttribute("show-if");
+      const classIf = el.getAttribute("class-if");
+
+      // Handle `data-bind`
+      if (bindKey) {
+        if (el.tagName === "INPUT") {
+          if (el.type === "checkbox" || el.type === "radio") {
+            el.checked = !!initialState[bindKey]; // ✅ Check/uncheck based on state
+          } else {
+            el.value = initialState[bindKey] || ""; // ✅ Reset text inputs
+          }
+        } else if (el.tagName === "TEXTAREA" || el.tagName === "SELECT") {
+          el.value = initialState[bindKey] || ""; // ✅ Reset textarea and select fields
+        } else {
+          el.textContent = initialState[bindKey] || ""; // ✅ Reset non-input elements
+        }
+      }
+
+      // Handle `show-if`
+      if (showIf && typeof this.data[showIf] === "function") {
+        el.style.display = this.data[showIf]() ? "" : "none"; // ✅ Show/hide element
+      }
+
+      // Handle `class-if`
+      if (classIf && typeof this.data[classIf] === "function") {
+        el.className = this.data[classIf]() || ""; // ✅ Apply correct class
+      }
+    });
+  }
 }
 
 
 const instance = new State();
+window.State = instance;
 export default instance;
 
 function trackOnShowElements() {
@@ -204,7 +278,7 @@ function trackOnShowElements() {
             const onShowFn = element.getAttribute("onShow");
             if (onShowFn) {
               try {
-                new Function("element", onShowFn)(element);
+                element.onShow(); // ✅ Call stored function
               } catch (e) {
                 console.error("Error executing onShow function:", e);
               }
@@ -220,17 +294,13 @@ function trackOnShowElements() {
 }
 
 export function validate(groupName) {
-  // ✅ Select all elements inside a wrapper group="signup"
   const wrapper = document.querySelector(`[group="${groupName}"]`);
   const wrapperFields = wrapper ? [...wrapper.querySelectorAll("input, select, textarea")] : [];
 
-  // ✅ Select all elements that have group="signup" directly (even if outside the wrapper)
   const directFields = [...document.querySelectorAll(`[group="${groupName}"]:is(input, select, textarea)`)];
 
-  // ✅ Select all elements that are inside a group wrapper but are not inputs
   const extraFieldsInsideGroups = [...document.querySelectorAll(`[group="${groupName}"] input, select, textarea`)];
 
-  // ✅ Merge all the fields into one array
   const fields = [...new Set([...wrapperFields, ...directFields, ...extraFieldsInsideGroups])].filter(
     field => typeof field.validIf === "function"
   );
@@ -262,13 +332,11 @@ export function validate(groupName) {
     }
   });
 
-  // ✅ Update per-field validation state
   instance.set(validationStates);
-
-  // ✅ Also track group-wide validation state
   instance.set({ [`${groupName}_valid`]: allValid, [`${groupName}_invalid`]: !allValid });
-}
 
+  return allValid; // ✅ Return true if all fields are valid, false otherwise
+}
 
 
 

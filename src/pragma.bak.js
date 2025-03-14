@@ -5,6 +5,7 @@ export const Fragment = Symbol("Fragment");
 export let route = State.get("route");
 
 export const h = (tag, props = {}, ...children) => {
+
     if (typeof tag === "function") {
         return tag({ ...props, children, route: State.get("route") });
     }
@@ -24,8 +25,39 @@ export const h = (tag, props = {}, ...children) => {
 
     Object.entries(props || {}).forEach(([key, val]) => {
         if (key.startsWith("on") && typeof val === "function") {
-            el.addEventListener(key.slice(2).toLowerCase(), val);
+            if (key === "onShow") {
+                // ✅ IntersectionObserver to trigger when element is shown
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            val(el); // Call onShow function
+                        }
+                    });
+                }, { threshold: 0.1 });
+
+                requestAnimationFrame(() => {
+                    if (document.contains(el)) {
+                        observer.observe(el);
+                    }
+                });
+
+                el.onShow = val; // ✅ Store function as a property
+            } else {
+                el.addEventListener(key.slice(2).toLowerCase(), val);
+            }
         } else if (key === "class-if" && typeof val === "function") {
+            const updateVisibility = () => {
+                el.style.display = val() ? "" : "none"; // ✅ Show/hide based on function return
+            };
+
+            updateVisibility(); // ✅ Run once on creation
+
+            // ✅ Subscribe to state changes to ensure updates
+            const boundKey = val.toString().match(/State\.get\(["'](.+?)["']\)/);
+            if (boundKey && boundKey[1]) {
+                State.subscribe(boundKey[1], updateVisibility);
+            }
+
             const updateClass = () => {
                 const className = val();
                 el.className = className || ""; // Set the class name dynamically
@@ -45,6 +77,7 @@ export const h = (tag, props = {}, ...children) => {
             el.setAttribute(key, val);
         }
     });
+
 
     if (el.tagName === "INPUT" || el.tagName === "TEXTAREA" || el.tagName === "SELECT") {
         const bindKey = props["data-bind"];
