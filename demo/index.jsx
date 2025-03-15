@@ -26,6 +26,11 @@ routes["/404"] = () => h("div", {}, "Page Not Found");
 let App = () => (
     <>  
         <br/>
+        <div>
+        <button onClick={() => State.set({ count: (State.get("count") || 0) + 1 })}>
+            Clicked {() => State.get("count")} times
+        </button>
+        </div>
         <h1>Validation</h1>
         <div group="signup" style="display: flex; flex-direction: column; gap: 10px; max-width: 300px;">
             <label>Username:</label>

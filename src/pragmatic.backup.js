@@ -319,32 +319,7 @@ export const h = (tag, props = {}, ...children) => {
         }
     }
 
-      children.flat().forEach((child) => {
-        if (typeof child === "function") {
-            // ✅ If child is a function, create a text node and update dynamically
-            const textNode = document.createTextNode(child()); // Initial render
-    
-            // ✅ Define an update function that re-renders when state changes
-            const updateText = () => {
-                textNode.textContent = child();
-            };
-    
-            // ✅ Extract state keys used inside the function and subscribe
-            const usedKeys = child.toString().match(/State\.get\(["'](.+?)["']\)/g);
-            if (usedKeys) {
-                usedKeys.forEach((match) => {
-                    const key = match.match(/State\.get\(["'](.+?)["']\)/)[1];
-                    State.subscribe(key, updateText);
-                });
-            }
-  
-          el.appendChild(textNode); // ✅ Append the reactive text node
-      } else {
-          // ✅ If not a function, append as usual
-          el.append(child);
-      }
-  });
-  
+    children.flat().forEach(child => el.append(child));
 
     return el;
 };
