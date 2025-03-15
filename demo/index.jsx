@@ -1,3 +1,4 @@
+
 import "./confetti.css";
 
 // Log the reactive data object
@@ -165,6 +166,8 @@ let App = () => (
         <button onClick={() => State.set({ step: 2, isVisible: false })}>Step 2 + Hidden</button>
         <div show-if="step==1 && isVisible">This shows when `step` is 1 AND `isVisible` is true.</div>
         <div show-if="step==1 || isVisible">This shows when `step` is 1 OR `isVisible` is true.</div>
+        <div show-if={()=>State.get("isVisible")}>This uses function syntax to show when `isVisible` is true.</div>
+        <div show-if={()=>!State.get("isVisible")}>This uses function syntax to show wehn `isVisible` is false.</div>
     </>
 );
 
