@@ -1,4 +1,4 @@
-
+import { TodoApp } from "./todo/TodoApp";
 import "./confetti.css";
 
 // Log the reactive data object
@@ -168,9 +168,15 @@ let App = () => (
         <div show-if="step==1 || isVisible">This shows when `step` is 1 OR `isVisible` is true.</div>
         <div show-if={()=>State.get("isVisible")}>This uses function syntax to show when `isVisible` is true.</div>
         <div show-if={()=>!State.get("isVisible")}>This uses function syntax to show wehn `isVisible` is false.</div>
+
+        <h2>Update List on Add</h2>
+        <TodoApp />
     </>
 );
 
+function addTodo() {
+
+}
 
 
 jssLite({
@@ -200,13 +206,9 @@ setTimeout(() => {
     styles.remove();
 }, 2000);
 
-// Mount the JSX component to the DOM
-// const app = h(App);
-// console.log("App Render Output:", app);
-// document.body.appendChild(app);
-
 
 const render = () => {
+    console.log("Rendering")
     const appRoot = document.getElementById("app");
     if (!appRoot) {
         console.error("No #app element found!");
@@ -222,5 +224,5 @@ document.addEventListener("DOMContentLoaded", render);
 // ✅ Subscribe to state updates at the highest level
 State.subscribe("todos", render);
 State.subscribe("filter", render);
-State.subscribe("route", render); // If routing is involved
+//State.subscribe("route", render); // If routing is involved
 
