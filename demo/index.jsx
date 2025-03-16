@@ -3,7 +3,16 @@ import "./confetti.css";
 
 // Log the reactive data object
 console.log("Loaded State:", data);
-
+// jssLite({
+//     body: {
+//         "background-color": "black",
+//         "color": "#333333"
+//     },
+//     "input[type='text']" : {
+//         "background-color": "#111111",
+//         "color": "#444444"
+//     }
+// })
 // Define a Goober component
 let Goober = ({children}) => (
     <Fragment>
@@ -27,9 +36,10 @@ let App = () => (
     <>  
         <br/>
         <div>
-        <button onClick={() => State.set({ count: (State.get("count") || 0) + 1 })}>
-            Clicked {() => State.get("count")} times
+        <button onClick={() => State.set({ count: (State.get("count") || 0) + 1, clicks: (State.get("clicks") || 0) + 1 })}>
+            Clicked {() => State.get("count")} times, with {() => State.get("clicks")} clicks
         </button>
+
         </div>
         <h1>Validation</h1>
         <div group="signup" style="display: flex; flex-direction: column; gap: 10px; max-width: 300px;">
@@ -227,7 +237,7 @@ const render = () => {
 document.addEventListener("DOMContentLoaded", render);
 
 // ✅ Subscribe to state updates at the highest level
-State.subscribe("todos", render);
-State.subscribe("filter", render);
+//State.subscribe("todos", render);
+//State.subscribe("filter", render);
 //State.subscribe("route", render); // If routing is involved
 

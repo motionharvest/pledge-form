@@ -2,6 +2,12 @@ import { TodoItem } from "./TodoItem";
 const getTodos = () => State.get("todos") || [];
 
 export const TodoApp = () => {
+    let todos = State.get("todos");
+    if(!todos) {
+        State.set({
+            "todos": []
+        });
+    }
     return (
         <>
             <input type="text" data-bind="newTodoText" />
@@ -17,7 +23,7 @@ export const TodoApp = () => {
             </button>
 
             <ul>
-                {getTodos().map(todo => (
+                {() => State.get("todos").map(todo => (
                     <TodoItem key={todo.id} {...todo} />
                 ))}
             </ul>
