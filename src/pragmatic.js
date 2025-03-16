@@ -1,14 +1,21 @@
 /**
- * Pragma.js 
+ * Pragmatic.js - A lightweight state management and UI rendering library.
+ *
+ * Provides reactive state management, JSX-like rendering, routing, and form validation.
+ * State is stored in localStorage for persistence across sessions.
  */
 
+/**
+ * Singleton class for state management.
+ * Manages reactive data, subscriptions, and automatic updates to the DOM.
+ */
 class StateSingleton {
 	constructor() {
 		if (!StateSingleton.instance) {
 			let storedData = JSON.parse(localStorage.getItem("state")) || {};
 			this.data = reactive(storedData, this.updateLocalStorage.bind(this));
 			bindInputs(this.data);
-			this.subscribers = {}; // ✅ Pub-sub storage
+			this.subscribers = {};
 			StateSingleton.instance = this;
 
 			// Initialize route state
@@ -23,6 +30,11 @@ class StateSingleton {
 		return StateSingleton.instance;
 	}
 
+  /**
+     * Updates localStorage when state changes.
+     * @param {string} key - The state key that changed.
+     * @param {*} value - The new value of the state key.
+     */
 	updateLocalStorage(key, value) {
 		localStorage.setItem("state", JSON.stringify(this.data));
 		updateDOM(key, value);
@@ -34,13 +46,11 @@ class StateSingleton {
 		Object.entries(properties).forEach(([key, value]) => {
 			this.data[key] = value;
 
-			// ✅ Notify subscribers
 			if (this.subscribers[key]) {
 				this.subscribers[key].forEach(callback => callback(value));
 			}
 		});
 
-		// ✅ Ensure `show-if` elements update after state changes
 		requestAnimationFrame(updateVisibility);
 		requestAnimationFrame(updateClasses);
 	}
@@ -50,64 +60,54 @@ class StateSingleton {
 	}
 
 	getData() {
-		return this.data; // ✅ Now returns the full reactive state
+		return this.data;
 	}
 
-	// ✅ Subscribe to state changes
+	
 	subscribe(key, callback) {
 		if (!this.subscribers[key]) {
 			this.subscribers[key] = [];
 		}
 		this.subscribers[key].push(callback);
-
-		// ✅ Immediately call with current value
 		callback(this.data[key]);
 
-		// ✅ Return unsubscribe function
 		return () => {
 			this.subscribers[key] = this.subscribers[key].filter(cb => cb !== callback);
 		};
 	}
 
 	reset(initialState = {}) {
-		// Clear all existing state properties
 		Object.keys(this.data).forEach(key => delete this.data[key]);
-
-		// Reset subscribers
 		this.subscribers = {};
-
-		// Restore initial state
 		Object.assign(this.data, initialState);
 
-		// Find all elements with `data-bind`, `show-if`, or `class-if` and reset them
 		document.querySelectorAll("[data-bind], [show-if], [class-if]").forEach(el => {
 			const bindKey = el.getAttribute("data-bind");
 			const showIf = el.getAttribute("show-if");
 			const classIf = el.getAttribute("class-if");
 
-			// Handle `data-bind`
 			if (bindKey) {
 				if (el.tagName === "INPUT") {
 					if (el.type === "checkbox" || el.type === "radio") {
-						el.checked = !!initialState[bindKey]; // ✅ Check/uncheck based on state
+						el.checked = !!initialState[bindKey];
 					} else {
-						el.value = initialState[bindKey] || ""; // ✅ Reset text inputs
+						el.value = initialState[bindKey] || "";
 					}
 				} else if (el.tagName === "TEXTAREA" || el.tagName === "SELECT") {
-					el.value = initialState[bindKey] || ""; // ✅ Reset textarea and select fields
+					el.value = initialState[bindKey] || "";
 				} else {
-					el.textContent = initialState[bindKey] || ""; // ✅ Reset non-input elements
+					el.textContent = initialState[bindKey] || "";
 				}
 			}
 
 			// Handle `show-if`
 			if (showIf && typeof this.data[showIf] === "function") {
-				el.style.display = this.data[showIf]() ? "" : "none"; // ✅ Show/hide element
+				el.style.display = this.data[showIf]() ? "" : "none";
 			}
 
 			// Handle `class-if`
 			if (classIf && typeof this.data[classIf] === "function") {
-				el.className = this.data[classIf]() || ""; // ✅ Apply correct class
+				el.className = this.data[classIf]() || "";
 			}
 		});
 	}
@@ -140,9 +140,11 @@ function updateVisibility() {
 	requestAnimationFrame(trackOnShowElements)
 }
 
-
-//------------------------------------------------- END UPDATE VISIBILITY
-
+/**
+ * Evaluates complex conditional expressions for `show-if` and `class-if` attributes.
+ * @param {string} condition - The conditional expression to evaluate.
+ * @returns {boolean} - Whether the condition evaluates to true or false.
+ */
 function evaluateCondition(condition) {
 	return condition.split(/\s*\|\|\s*/).some(orPart =>
 		orPart.split(/\s*&&\s*/).every(andPart =>
@@ -151,15 +153,19 @@ function evaluateCondition(condition) {
 	);
 }
 
+/**
+ * Evaluates a single condition expression.
+ * @param {string} condition - The condition to evaluate.
+ * @returns {boolean} - The result of the condition.
+ */
 function evaluateSingleCondition(condition) {
 	let match = false;
 	let stateKey, operator, expectedValue;
 
 	if (condition.startsWith("!")) {
-		return !State.get(condition.substring(1).trim()); // ✅ Properly negate the state value
+		return !State.get(condition.substring(1).trim());
 	}
 
-	// ✅ Keep Route Logic
 	if (condition.startsWith("route~=")) {
 		return State.get("route").startsWith(condition.replace("route~=", "").trim());
 	}
@@ -170,19 +176,16 @@ function evaluateSingleCondition(condition) {
 		return State.get("route") !== condition.replace("route!=", "").trim();
 	}
 
-
-	// ✅ Boolean/Exists check
 	if (!/[=<>!~]|matches/.test(condition)) {
 		return !!State.get(condition);
 	}
 
-	// ✅ Parse Condition into { key, operator, value }
 	[stateKey, operator, expectedValue] = parseCondition(condition);
 	const stateValue = State.get(stateKey.trim());
 
 	if (operator === "matches") {
 		try {
-			const regexPattern = expectedValue.trim().replace(/^\/|\/$/g, ""); // Remove slashes
+			const regexPattern = expectedValue.trim().replace(/^\/|\/$/g, "");
 			const regex = new RegExp(regexPattern);
 			match = regex.test(stateValue);
 		} catch (e) {
@@ -213,7 +216,6 @@ function evaluateSingleCondition(condition) {
 				break;
 		}
 	}
-
 	return match;
 }
 
@@ -222,14 +224,13 @@ function parseCondition(condition) {
 	return match ? [match[1], match[2], match[3]] : [condition, '', ''];
 }
 
-
-
-
-//----------------------------------------------- End evaluate Conditions
-
-
-
-
+/**
+ * Creates and returns a DOM element or component using JSX-like syntax.
+ * @param {string|Function} tag - The tag name or component function.
+ * @param {Object} props - The properties to set on the element.
+ * @param {...any} children - The child elements or components.
+ * @returns {Node} - The generated DOM node.
+ */
 export const h = (tag, props = {}, ...children) => {
 
 	if (typeof tag === "function") {
@@ -256,11 +257,10 @@ export const h = (tag, props = {}, ...children) => {
 	Object.entries(props || {}).forEach(([key, val]) => {
 		if (key.startsWith("on") && typeof val === "function") {
 			if (key === "onShow") {
-				// ✅ IntersectionObserver to trigger when element is shown
 				const observer = new IntersectionObserver((entries) => {
 					entries.forEach(entry => {
 						if (entry.isIntersecting) {
-							val(el); // Call onShow function
+							val(el);
 						}
 					});
 				}, {
@@ -273,18 +273,17 @@ export const h = (tag, props = {}, ...children) => {
 					}
 				});
 
-				el.onShow = val; // ✅ Store function as a property
+				el.onShow = val;
 			} else {
 				el.addEventListener(key.slice(2).toLowerCase(), val);
 			}
 		} else if (key === "class-if" && typeof val === "function") {
 			const updateVisibility = () => {
-				el.style.display = val() ? "" : "none"; // ✅ Show/hide based on function return
+				el.style.display = val() ? "" : "none";
 			};
 
-			updateVisibility(); // ✅ Run once on creation
+			updateVisibility();
 
-			// ✅ Subscribe to state changes to ensure updates
 			const boundKey = val.toString().match(/State\.get\(["'](.+?)["']\)/);
 			if (boundKey && boundKey[1]) {
 				State.subscribe(boundKey[1], updateVisibility);
@@ -292,13 +291,13 @@ export const h = (tag, props = {}, ...children) => {
 
 			const updateClass = () => {
 				const className = val();
-				el.className = className || ""; // Set the class name dynamically
+				el.className = className || "";
 			};
-			updateClass(); // ✅ Run once on creation
+			updateClass();
 			State.set({
 				[`__update_${tag}`]: updateClass
-			}); // ✅ Store for reactive updates
-			window.addEventListener("popstate", updateClass); // ✅ Update on navigation
+			});
+			window.addEventListener("popstate", updateClass);
 		} else if (key === "show-if" && typeof val === "function") {
 			if (typeof val === "function") {
 				//
@@ -315,7 +314,7 @@ export const h = (tag, props = {}, ...children) => {
 				}
 			}
 		} else if (key === "valid-if" && typeof val === "function") {
-			el.validIf = val; // ✅ Store as a property, not an attribute
+			el.validIf = val;
 		} else {
 			el.setAttribute(key, val);
 		}
@@ -344,21 +343,17 @@ export const h = (tag, props = {}, ...children) => {
 
 	children.flat().forEach((child) => {
 		if (typeof child === "function") {
-			const placeholder = document.createTextNode(""); // ✅ Stable reference in DOM
+			const placeholder = document.createTextNode("");
 			el.appendChild(placeholder);
 
 			const render = () => {
 				const result = child();
 
-				// ✅ If it's an array, insert each item properly
 				if (Array.isArray(result)) {
-					// Remove existing dynamic elements before inserting new ones
 					while (placeholder.nextSibling && placeholder.nextSibling.nodeType !== 8) {
 						placeholder.nextSibling.remove();
 					}
 
-					// Process the array in reverse order to maintain correct order when inserting
-					// Or create a document fragment to hold all items in the correct order
 					const fragment = document.createDocumentFragment();
 					result.forEach(item => {
 						if (item instanceof Node) {
@@ -368,25 +363,20 @@ export const h = (tag, props = {}, ...children) => {
 						}
 					});
 
-					// Insert everything at once in the correct order
 					placeholder.after(fragment);
 				}
 
-				// ✅ Handle inline text updates without breaking static text
 				else if (typeof result === "string" || typeof result === "number") {
 					if (placeholder.nextSibling && placeholder.nextSibling.nodeType === 3) {
 						placeholder.nextSibling.textContent = String(result);
 					} else {
 						placeholder.after(document.createTextNode(String(result)));
 					}
-				}
-				// ✅ Handle single nodes correctly
-				else if (result instanceof Node) {
+				}	else if (result instanceof Node) {
 					placeholder.after(result);
 				}
 			};
 
-			// ✅ Subscribe to state changes
 			const usedKeys = child.toString().match(/State\.get\(["'](.+?)["']\)/g);
 			if (usedKeys) {
 				usedKeys.forEach((match) => {
@@ -395,10 +385,8 @@ export const h = (tag, props = {}, ...children) => {
 				});
 			}
 
-			render(); // ✅ Initial render
-		}
-		// ✅ Handle arrays directly in JSX
-		else if (Array.isArray(child)) {
+			render();
+		}	else if (Array.isArray(child)) {
 			child.forEach(item => {
 				if (item instanceof Node) {
 					el.appendChild(item);
@@ -406,17 +394,12 @@ export const h = (tag, props = {}, ...children) => {
 					el.appendChild(document.createTextNode(String(item)));
 				}
 			});
-		}
-		// ✅ Handle text and numbers
-		else if (typeof child === "string" || typeof child === "number") {
+		}	else if (typeof child === "string" || typeof child === "number") {
 			el.appendChild(document.createTextNode(child));
-		}
-		// ✅ Handle single nodes
-		else if (child instanceof Node) {
+		} else if (child instanceof Node) {
 			el.appendChild(child);
 		}
 	});
-
 
 	return el;
 };
@@ -425,10 +408,14 @@ export const h = (tag, props = {}, ...children) => {
 
 
 export const routes = {
-	'/404': () => h("div", {}, "Page Not Found")
+	'/404': () => h("div", "404 Page not found")
 };
 
-// Routing System
+/**
+ * Navigates to a new route and updates the view accordingly.
+ * @param {string} path - The target route path.
+ * @param {boolean} replace - Whether to replace the current history state.
+ */
 export const navigate = (path, replace = false) => {
 	if (path === route) return;
 
@@ -474,20 +461,40 @@ document.addEventListener("DOMContentLoaded", () => {
 	navigate(route, true);
 });
 
-// Validation System
+/**
+ * Validates all fields within a specified validation group.
+ *
+ * This function iterates over all form fields within the given `groupName`,
+ * checking their `valid-if` attributes (if present). If a field fails validation,
+ * an error class is applied, and the function returns `false`. If all fields pass,
+ * it returns `true`.
+ *
+ * @param {string} groupName - The validation group name.
+ * @returns {boolean} - `true` if all fields pass validation, otherwise `false`.
+ *
+ * @example
+ * // HTML:
+ * <form group-name="signup">
+ *     <input type="text" data-bind="email" valid-if="() => State.get('email').includes('@')">
+ *     <input type="password" data-bind="password">
+ * </form>
+ * <button onClick="validate('signup')">Submit</button>
+ *
+ * // JavaScript:
+ * if (validate("signup")) {
+ *     console.log("Form is valid!");
+ * } else {
+ *     console.log("Validation failed.");
+ * }
+ */
 export function validate(groupName) {
 	const wrapper = document.querySelector(`[group="${groupName}"]`);
 	const wrapperFields = wrapper ? [...wrapper.querySelectorAll("input, select, textarea")] : [];
-
 	const directFields = [...document.querySelectorAll(`[group="${groupName}"]:is(input, select, textarea)`)];
-
 	const extraFieldsInsideGroups = [...document.querySelectorAll(`[group="${groupName}"] input, select, textarea`)];
-
 	const fields = [...new Set([...wrapperFields, ...directFields, ...extraFieldsInsideGroups])].filter(
 		field => typeof field.validIf === "function"
 	);
-
-	console.log("Validating fields:", fields); // Debugging log
 
 	let allValid = true;
 	let validationStates = {};
@@ -520,27 +527,26 @@ export function validate(groupName) {
 		[`${groupName}_invalid`]: !allValid
 	});
 
-	return allValid; // ✅ Return true if all fields are valid, false otherwise
+	return allValid;
 }
 
-
-
-
+/**
+ * Resets validation errors within a specified validation group.
+ *
+ * This function removes any error indicators from fields within the
+ * given `groupName`, effectively resetting their validation state.
+ *
+ * @param {string} groupName - The validation group name.
+ *
+ * @example
+ * resetValidation("signup");
+ */
 export function resetValidation(groupName) {
-	// ✅ Select all elements inside a wrapper group="signup"
 	const wrapper = document.querySelector(`[group="${groupName}"]`);
 	const wrapperFields = wrapper ? [...wrapper.querySelectorAll("input, select, textarea")] : [];
-
-	// ✅ Select all elements that have group="signup" directly (even if outside the wrapper)
 	const directFields = [...document.querySelectorAll(`[group="${groupName}"]:is(input, select, textarea)`)];
-
-	// ✅ Select all elements that are inside a group wrapper but are not inputs
 	const extraFieldsInsideGroups = [...document.querySelectorAll(`[group="${groupName}"] input, select, textarea`)];
-
-	// ✅ Merge all the fields into one array
 	const fields = [...new Set([...wrapperFields, ...directFields, ...extraFieldsInsideGroups])];
-
-	console.log("Resetting validation for fields:", fields); // Debugging log
 
 	let validationStates = {};
 
@@ -548,19 +554,15 @@ export function resetValidation(groupName) {
 		let bindKey = field.getAttribute("data-bind");
 
 		if (bindKey) {
-			// ✅ Clear valid & invalid states
 			validationStates[`${bindKey}_valid`] = undefined;
 			validationStates[`${bindKey}_invalid`] = undefined;
 
-			// ✅ Remove visual classes
 			field.classList.remove("valid", "invalid");
 		}
 	});
 
-	// ✅ Reset per-field validation state
 	State.set(validationStates);
 
-	// ✅ Reset group-wide validation state
 	State.set({
 		[`${groupName}_valid`]: undefined,
 		[`${groupName}_invalid`]: undefined
@@ -568,7 +570,10 @@ export function resetValidation(groupName) {
 }
 
 /**
- * reactive.js
+ * Creates a reactive object that triggers updates when properties change.
+ * @param {Object} obj - The initial state object.
+ * @param {Function} callback - Function to call on state updates.
+ * @returns {Proxy} - A proxy object with reactive behavior.
  */
 export function reactive(obj, callback) {
 	return new Proxy(obj, {
@@ -581,6 +586,12 @@ export function reactive(obj, callback) {
 	});
 }
 
+/**
+ * Updates DOM elements bound to a specific state key by setting their text content.
+ * Also ensures `data-bind` elements remain in sync with state changes.
+ * @param {string} key - The state key.
+ * @param {*} value - The new value.
+ */
 export function updateDOM(key, value) {
 	const elements = document.querySelectorAll(`[data-bind="${key}"]`);
 	elements.forEach(element => {
@@ -605,8 +616,11 @@ export function updateDOM(key, value) {
 	requestAnimationFrame(updateClasses);
 }
 
-
-
+/**
+ * Updates elements with `class-if` attributes based on conditions.
+ * Dynamically toggles CSS classes based on state values.
+ * @example <div class-if="isActive ? 'active' : 'inactive'"></div>
+ */
 function updateClasses() {
 	document.querySelectorAll("[class-if]").forEach((element) => {
 		const classRules = element.getAttribute("class-if").split(";").map(rule => rule.trim());
@@ -630,9 +644,12 @@ function updateClasses() {
 	});
 }
 
-
-
-
+/**
+ * Binds input elements with `data-bind` attributes to state.
+ * Ensures two-way data binding between form elements and state.
+ * Works with input, textarea, and select elements.
+ * @example <input type="text" data-bind="username">
+ */
 function bindInputs(data) {
 	document.addEventListener("change", (event) => {
 		const target = event.target;
@@ -652,8 +669,11 @@ function bindInputs(data) {
 	});
 }
 
-
-
+/**
+ * Tracks elements with `on-show` attributes and executes callbacks when they appear in the viewport.
+ * Useful for lazy-loading elements or triggering animations when elements become visible.
+ * @example <div on-show="() => console.log('Element is now visible')"></div>
+ */
 function trackOnShowElements() {
 	const elements = document.querySelectorAll("[onShow]");
 
@@ -665,7 +685,7 @@ function trackOnShowElements() {
 						const onShowFn = element.getAttribute("onShow");
 						if (onShowFn) {
 							try {
-								element.onShow(); // ✅ Call stored function
+								element.onShow();
 							} catch (e) {
 								console.error("Error executing onShow function:", e);
 							}

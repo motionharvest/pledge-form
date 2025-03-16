@@ -150,7 +150,7 @@ let App = () => (
         </div>
         <label for="trigger">Trigger Confetti</label>
         <br />--<br /><br /><br />
-        <div className="binder" data-bind="linked">{State.get('linked')}</div>
+        <div class="binder" data-bind="linked">{State.get('linked')}</div>
         <button onClick={() => console.log(State.get('linked'))}>Check linked</button>
         <button onClick={() => console.log(State.get('newProperty'))}>Check newProperty</button>
         <Goober>There is no way it was that easy! </Goober>
@@ -189,10 +189,6 @@ let App = () => (
     </>
 );
 
-function addTodo() {
-
-}
-
 
 jssLite({
     ".blue": {
@@ -222,22 +218,6 @@ setTimeout(() => {
 }, 2000);
 
 
-const render = () => {
-    console.log("Rendering")
-    const appRoot = document.getElementById("app");
-    if (!appRoot) {
-        console.error("No #app element found!");
-        return;
-    }
-    appRoot.innerHTML = ""; // ✅ Clear previous render
-    appRoot.appendChild(App()); // ✅ Re-run the main app component
-};
+document.getElementById("app").appendChild(<App/>)
 
-// ✅ Ensure the app renders on initial load
-document.addEventListener("DOMContentLoaded", render);
-
-// ✅ Subscribe to state updates at the highest level
-//State.subscribe("todos", render);
-//State.subscribe("filter", render);
-//State.subscribe("route", render); // If routing is involved
 
