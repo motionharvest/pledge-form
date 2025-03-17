@@ -10,27 +10,23 @@ export let Step8 = (props) => (
 
             
             <div class="mt-6" show-if="step2_1_yes">
-                <h3 class="font-bold">Your Impact in Action</h3>
-                <p class="text-gray-700 text-sm">A one-night only behind-the-scenes exclusive first glimpse of our Teen Troupe’s production of Twelfth Night before it opens.</p>
-
-                <p class="mt-2 font-semibold">Details</p>
-                <p class="text-sm text-gray-700">May 7, 2025 - 5:30pm<br/>Lyman Center, Kendall Drama Lab</p>
-
+                <h3 class="font-bold">1- Your Impact in Action</h3>
+                <p class="mt-4 font-semibold">💙 Board Member Commitment</p>
                 <div class="mt-2">
-                    <label class="flex items-center space-x-2">
-                        <input disabled="disabled" type="checkbox" class="w-5 h-5 text-indigo-600 border-gray-300 rounded" data-bind="step2_1_yes"></input>
-                        <span class="text-gray-700 text-sm">Yes, I’ll attend and bring a guest</span>
+                    <label class="flex space-x-2 items-start">
+                        <input type="checkbox" disabled="disabled" class="w-5 h-5 shrink-0 text-indigo-600 border-gray-300 rounded" data-bind="step2_1_yes"></input>
+                        <span class="text-gray-700 text-sm">Yes, I’ll reach out to 3-5 friends or colleagues and encourage them to give on May 7 between 8 and 9pm, and I’ll post on my social media, email, and phone my network to spread the word and encourage participation.</span>
                     </label>
                 </div>
             </div>
 
             
             <div class="mt-6" show-if="step2_2_yes">
-                <h3 class="font-bold">Pub Sing</h3>
-                <p class="text-gray-700 text-sm">(Update) Join us for a night of laughter and song and help us close out the Great Give.</p>
+                    <h3 class="font-bold">2- Pub Sing</h3>
+                    <p class="text-gray-700 text-sm">Join us for a night of laughter and song and help us close out the Great Give.</p>
 
-                <p class="mt-2 font-semibold">Details</p>
-                <p class="text-sm text-gray-700">May 8, 2025 - 5:30pm<br/>Location to be determined</p>
+                    <p class="mt-2 font-semibold">Details</p>
+                    <p class="text-sm text-gray-700">May 8, 2025 - 5:30pm<br />Location to be determined</p>
 
                 <div class="mt-2">
                     <label class="flex items-center space-x-2">
@@ -264,7 +260,7 @@ export let Step8 = (props) => (
             </div>
         </div>
         {/**  */}
-            <div class=" mb-32 md:mb-4 bg-white p-6 rounded-lg shadow-lg max-w-2xl w-full">
+            <div class=" mb-4 bg-white p-6 rounded-lg shadow-lg max-w-2xl w-full">
             <h2 class="text-xl font-semibold">Sponsorship Outreach <a href="#" onClick={() => props.setStep(7)}>✏️edit</a></h2>
 
             <div class="mt-6" show-if="seasonSponsorship||masqueradeSponsorship||sponsorLeads||sponsorshipSupport">
@@ -294,8 +290,10 @@ export let Step8 = (props) => (
                     </label>
                 </div>
             </div>
-    
+            
         </div>
+            <div class="mb-32 md:mb-4 bg-white p-6 text-center center max-w-2xl w-full">We recommend printing this page for your records.
+            </div>
     </div>
     <div class="control-ui shadow-lg flex justify-center gap-4 mt-2 mb-2">
             <button onClick={() => props.setStep(7)} class="w-full bg-gray-600 hover:bg-gray-700 text-white py-2 rounded-lg text-sm font-medium transition">Back</button>
